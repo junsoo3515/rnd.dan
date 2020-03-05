@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 		xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:p="http://www.springframework.org/schema/p" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd"
+>
+	<context:component-scan base-package="kr.co.ucp.dan"  use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+	</context:component-scan>
+
+	<mvc:annotation-driven />
+	<bean id="jsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<ref bean="localeChangeInterceptor" />
+			</list>
+		</property>
+		<property name="order" value="0" /><!--  jwkim 추가 -->
+	</bean>
+
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
+	<!-- 쿠키를 이용한 Locale 이용시 <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver"/> -->
+	<bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+		<property name="paramName" value="language" />
+	</bean>
+
+	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="defaultErrorView" value="cmmn/egovError"/>
+		<property name="exceptionMappings">
+			<props>
+				<prop key="org.springframework.dao.DataAccessException">cmmn/dataAccessFailure</prop>
+				<prop key="org.springframework.transaction.TransactionException">cmmn/transactionFailure</prop>
+				<prop key="egovframework.rte.fdl.cmmn.exception.EgovBizException">cmmn/egovError</prop>
+				<prop key="org.springframework.security.AccessDeniedException">cmmn/egovError</prop>
+			</props>
+		</property>
+	</bean>
+
+<!--
+	<bean class="org.springframework.web.servlet.view.UrlBasedViewResolver" p:order="1" p:viewClass="org.springframework.web.servlet.view.JstlView" p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/>
+-->
+	<!-- ViewResolver -->
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="order" value="2" />
+		<property name="mediaTypes">
+			<map>
+				<entry key="atom" value="application/atom+xml" />
+				<entry key="html" value="text/html" />
+				<entry key="json" value="application/json" />
+				<entry key="js" value="text/javascript" />
+				<entry key="css" value="text/css" />
+			</map>
+		</property>
+		<property name="viewResolvers">
+		    <list>
+		    	<ref bean="tilesViewResolver"/>
+		    	<ref bean="beanNameViewResolver"/>
+		    	<ref bean="internalResourceViewResolver"/>
+		    </list>
+		</property>
+
+		<property name="defaultViews">
+			<list>
+				<bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
+			</list>
+		</property>
+		<property name="ignoreAcceptHeader" value="true"/>
+	</bean>
+   	<bean id="beanNameViewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="2"/>
+
+	<bean id="internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	<bean id="tilesViewResolver" class="org.springframework.web.servlet.view.tiles3.TilesViewResolver" p:order="3">
+		<property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView" />
+	</bean>
+
+	<bean name="excelView" class="kr.co.ucp.dan.cmm.ExcelView"/>
+		
+	<!-- TilesConfigurer -->
+	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+		<property name="definitions" value="classpath:/ucp/tiles/tilesdef.xml" />
+	</bean>
+	
+	<!-- FreeMarker -->
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="cache" value="true" />
+		<property name="suffix" value=".ftl" />
+		<property name="contentType" value="text/html; charset=UTF-8" />
+		<property name="exposeSpringMacroHelpers" value="true" />
+	</bean>
+
+	<!-- 이벤트 수신 서버 -->
+	<bean id="webSocketVerticle" class="kr.co.ucp.dan.monitor.socket.WebSocketVerticle"/>
+	<bean id="netSocketVerticle" class="kr.co.ucp.dan.monitor.socket.NetSocketVerticle"/>
+
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="alwaysUseFullPath" value="true">
+		</property>
+	</bean>
+
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="alwaysUseFullPath" value="true">
+		</property>
+	</bean>
+
+<!-- For Pagination Tag
+	<bean id="imageRenderer" class="egovframework.example.cmmn.web.EgovImgPaginationRenderer"/>
+	<bean id="paginationManager" class="egovframework.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationManager">
+		<property name="rendererType">
+			<map>
+				<entry key="image" value-ref="imageRenderer"/>
+			</map>
+		</property>
+	</bean>
+/For Pagination Tag -->
+
+
+	<mvc:view-controller path="/cmmn/validator.do" view-name="cmmn/validator"/>
+	<!-- 로그인 체크가 필요한 URL과 로그인 여부를 체크해준다 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/dan/login/login.do"/>
+			<mvc:exclude-mapping path="/dan/login/login.json"/>
+			<mvc:exclude-mapping path="/dan/login/logout.do"/>
+			<mvc:exclude-mapping path="/dan/login/redirect.do"/>
+			<mvc:exclude-mapping path="/dan/login/findpwd.do"/>
+			<mvc:exclude-mapping path="/dan/login/findpwd.json"/>
+
+			<mvc:exclude-mapping path="/dan/monitor/main.do"/>
+
+			<!-- 관제에서 호출하기 위해 임시로 추가 SSO적용되면 삭제 -->
+			<mvc:exclude-mapping path="/cmm/getImage.image"/>
+			<mvc:exclude-mapping path="/cmm/getImageEvnt.image"/>
+			<mvc:exclude-mapping path="/cmm/getImageFclt.image"/>
+
+			<bean class="kr.co.ucp.dan.cmm.interceptor.AuthenticInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+</beans>

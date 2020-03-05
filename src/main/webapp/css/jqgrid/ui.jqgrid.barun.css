@@ -1,0 +1,13 @@
+/* Tree Grid */
+.ui-jqgrid .tree-wrap {float: left; position: relative;height: 18px;white-space: nowrap;overflow: hidden;}
+.ui-jqgrid .tree-minus {position: absolute; height: 18px; width: 18px; overflow: hidden;background: url(../../images/ico_folder_minus.png) center no-repeat}
+.ui-jqgrid .tree-plus {position: absolute;	height: 18px; width: 18px;	overflow: hidden;background: url(../../images/ico_folder_plus.png) center no-repeat}
+.ui-jqgrid .tree-leaf {position: absolute;	height: 18px; width: 18px;overflow: hidden;;background: url(../../images/ico_folder_leaf.png) center no-repeat}
+.ui-jqgrid .treeclick {cursor: pointer;}
+
+
+.ui-jqgrid .tree-wrap-ltr {float: left;}
+.ui-jqgrid .tree-wrap-rtl {float: right;}
+
+
+.grid-col-right-padding { padding-right: 5px !important;}

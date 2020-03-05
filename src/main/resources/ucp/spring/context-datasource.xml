@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+    
+     <!-- datasource 설정(propertyConfigurer 활용) -->
+    <alias name="dataSource" alias="dataSource" />
+    <alias name="dataSource" alias="egov.dataSource" />
+    
+   <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${db.ucp.driver}"/>
+        <property name="url" value="${db.ucp.url}" />
+        <property name="username" value="${db.ucp.username}"/>
+        <property name="password" value="${db.ucp.password}"/>
+        <property name="maxWait" value="10000" />
+		<property name="maxActive" value="30" />
+		<property name="maxIdle" value="30" />
+		<property name="minIdle" value="10" />
+		<property name="validationQuery" value="select 1 from dual" />
+		<property name="testWhileIdle" value="true" />
+		<property name="timeBetweenEvictionRunsMillis" value="3600000" />
+    </bean>
+    
+    <bean id="dataSource-tibero" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${db.ucp.driver}"/>
+        <property name="url" value="${db.ucp.url}" />
+        <property name="username" value="${db.ucp.username}"/>
+        <property name="password" value="${db.ucp.password}"/>
+        <property name="maxWait" value="10000" />
+		<property name="maxActive" value="30" />
+		<property name="maxIdle" value="30" />
+		<property name="minIdle" value="10" />
+		<property name="validationQuery" value="select 1 from dual" />
+		<property name="testWhileIdle" value="true" />
+		<property name="timeBetweenEvictionRunsMillis" value="3600000" />
+    </bean>
+
+    <alias name="dataSource-sms" alias="dataSource-sms" />
+    
+    <bean id="dataSource-sms" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${Globals.DriverClassNameSMS}"/>
+        <property name="url" value="${Globals.UrlSMS}" />
+        <property name="username" value="${Globals.UserNameSMS}"/>
+        <property name="password" value="${Globals.PasswordSMS}"/>
+        <property name="maxWait" value="10000" />
+		<property name="maxActive" value="30" />
+		<property name="maxIdle" value="30" />
+		<property name="minIdle" value="10" />
+		<property name="validationQuery" value="select 1 from dual" />
+		<property name="testWhileIdle" value="true" />
+		<property name="timeBetweenEvictionRunsMillis" value="3600000" />
+    </bean>
+</beans>

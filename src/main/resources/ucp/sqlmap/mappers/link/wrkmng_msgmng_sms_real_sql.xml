@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+    
+<mapper namespace="wrks_wrkmng_msgmng_sms_real">
+	<insert id="insert_sms"  parameterType="java.util.HashMap">
+		<![CDATA[
+			INSERT INTO TBL_SMS
+			(
+				CLTS_GB
+				, CLTS_RSVDT
+				, CLTS_SNDNUM
+				, CLTS_RCVNUM
+				, CLTS_TIT
+				, CLTS_MSG
+				, RESERVED1
+				, RESERVED2
+				, RESERVED3
+				, RESERVED4
+				, RESERVED5
+			)
+			VALUES 
+			(
+				'S'
+				, GETDATE()
+				, #{CLTS_SNDNUM}
+				, #{CLTS_RCVNUM}
+				, #{CLTS_TIT}
+				, #{CLTS_MSG}
+				, #{RESERVED1}
+				, #{RESERVED2}
+				, #{RESERVED3}
+				, #{RESERVED4}
+				, #{RESERVED5}
+			)						
+		]]>
+	</insert>
+
+</mapper>

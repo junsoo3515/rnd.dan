@@ -1,0 +1,742 @@
+@CHARSET "UTF-8";
+
+
+div#top_text {
+	width: 100%;
+	height: 100%;
+}
+
+div#menu{
+	left: 0px;
+	top: 0px;
+	width: 100%;	
+	height: 42px;
+	position: absolute;
+	text-align:right;
+	/*background-image: url("../../../images/mntr/gis/GIS_top_menu_01.jpg");
+	background: url("../../../images/mntr/gis/GIS_top_bar_01.jpg") repeat-x 0px 0px;*/
+	background-color: #24272c;
+}
+
+
+
+div#menu_text{
+	position: relative;
+	width: 100%;
+	height: 42px;
+	font-size: 11px;
+	display:inline-block;
+}
+div#menu_text ul {
+	margin: 0px;
+/*	padding-right: 25px; */
+	list-style:none;
+	text-align: center;
+}
+div#menu_text li {
+	margin: 0px;
+	padding: 2px;
+	width: 42px;
+	float: right;
+	color: #FFFFFF;
+}
+div#menu_text li:first-child {
+	margin-top: 10px;
+	width: 100px;
+	
+}
+
+div#menu_text li:hover {
+	color: yellow;
+}
+
+div#menuI{
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 25px;
+	position: absolute;
+	text-align:right;
+	background-image: url("../../../images/mntr/gis/GIS_top_menu_01.jpg");
+	background: url("../../../images/mntr/gis/GIS_top_bar_01.jpg") repeat-x 0px 0px;
+}
+
+div#menuI_text{
+	position: relative;
+	width:500px;
+	height: 22px;
+	font-family: '돋움',Dotum,Helvetica,'Apple SD Gothic Neo',Sans-serif;
+	font-size: 11px;
+	display:inline-block;
+}
+div#menuI_text ul {
+	margin: 0px;
+	padding-right: 22px;
+	list-style:none;
+	text-align: center;
+}
+div#menuI_text li {
+	margin: 0px;
+	padding: 2px;
+	width: 42px;
+	float: right;
+	color: #FFFFFF;
+}
+div#menuI_text li:hover {
+	color: yellow;
+}
+
+div#menuI_text .menu_btn {
+	cursor: pointer;
+	width: 42px;
+	height: 25px;
+	
+}
+
+div#menuI_text .menu_btn2 {
+	cursor: pointer;
+	width: 54px;
+	height: 25px;
+}
+
+div#menuI_text .menu_btn3 {
+	cursor: pointer;
+	width: 62px;
+	height: 22px;
+}
+
+.floater {
+	width:100%;
+	height:22px;
+	float:left;
+	padding-right:5px;
+}
+.shortcutFloater {
+	width: 100%;
+	height:32px;
+}
+div#menu_text .menu_btn {
+	cursor: pointer;
+	width: 42px;
+	height: 42px;
+	color: #ecf0f1;
+}
+
+div#menu_text label {
+	color: #ecf0f1;
+}
+
+div#menu_text .menu_btn2 {
+	cursor: pointer;
+	width: 54px;
+	height: 42px;
+	
+}
+
+div#menu_text .menu_btn3 {
+	cursor: pointer;
+	width: 62px;
+	height: 42px;
+}
+
+div#map{
+	position: absolute;
+	top: 40px;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+}
+
+div#tmap{
+	left: 0px;
+	top: 25px;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}
+
+
+div#includeMap{
+	position: relative;
+	width: 1110px; 
+	height: 300px; 
+	border: 1px solid;
+	float: left;
+	margin-bottom: 10px;
+}
+
+
+div#bottom {
+	left: 0px;
+	width: 100%;
+	bottom: 0px;
+	height: 25px;
+	position:absolute;
+	text-align: center;
+	z-index: 101;
+	background-image:url("../../../images/mntr/gis/GIS_buttom_bar_01.jpg");
+					
+}
+
+
+div#text_bottom{
+	position:relative;
+}
+
+div#shortcut {
+	position: absolute;
+	z-index: 100;
+	left:5px;
+	top: 47px;
+	width:68px;
+	height:250px;
+	font-family: '돋움',Dotum,Helvetica,'Apple SD Gothic Neo',Sans-serif;
+	font-size: 11px;
+	text-align: center;
+}
+
+div#shortcut ul {
+	margin: 0px;
+	padding: 0px;
+	list-style:none;
+}
+
+div#shortcut li {
+	margin: 0px;
+	padding: 2px 0px 2px 0px;
+	width:68px;
+	height:48px;
+	color: #434343;
+}
+div#menuBtn1 {
+	background:url("../../../images/mntr/gis/ico_move.png") no-repeat 14px 3px;
+}
+div#menuBtn1:hover {
+	background-image:url("../../../images/mntr/gis/ico_moveOver.png");
+	color: yellow;
+}
+div#menuBtn2 {
+	background:url("../../../images/mntr/gis/ico_plus.png") no-repeat 16px 5px;
+}
+div#menuBtn2:hover {
+	background-image:url("../../../images/mntr/gis/ico_plusOver.png");
+	color: yellow;
+}
+div#menuBtn3 {
+	background:url("../../../images/mntr/gis/ico_subtraction.png") no-repeat 16px 9px;
+}
+div#menuBtn3:hover {
+	background-image:url("../../../images/mntr/gis/ico_subtractionOver.png");
+	color: yellow;
+}
+div#menuBtn4 {
+	background:url("../../../images/mntr/gis/ico_layer.png") no-repeat 12px 4px;
+}
+div#menuBtn4:hover {
+	background-image:url("../../../images/mntr/gis/ico_layerOver.png");
+	color: yellow;
+}
+div#menuBtn5 {
+	background:url("../../../images/mntr/gis/ico_prew.png") no-repeat 17px 5px;
+}
+div#menuBtn5:hover {
+	background-image:url("../../../images/mntr/gis/ico_prewOver.png");
+	color: yellow;
+}
+div#menuBtn6 {
+	background:url("../../../images/mntr/gis/ico_next.png") no-repeat 17px 5px;
+}
+div#menuBtn6:hover {
+	background-image:url("../../../images/mntr/gis/ico_nextOver.png");
+	color: yellow;
+}
+div#menuBtn7 {
+	background:url("../../../images/mntr/gis/ico_reset.png") no-repeat 14px 3px;
+}
+div#menuBtn7:hover {
+	background-image:url("../../../images/mntr/gis/ico_resetOver.png");
+	color: yellow;
+}
+div#menuBtn8 {
+	background:url("../../../images/mntr/gis/ico_dist.png") no-repeat 12px 5px;
+}
+div#menuBtn8:hover {
+	background-image:url("../../../images/mntr/gis/ico_distOver.png");
+	color: yellow;
+}
+div#menuBtn9 {
+	background:url("../../../images/mntr/gis/ico_area.png") no-repeat 11px 5px;
+}
+div#menuBtn9:hover {
+	background-image:url("../../../images/mntr/gis/ico_areaOver.png");
+	color: yellow;
+}
+div#menuBtn10 {
+	background:url("../../../images/mntr/gis/ico_save.png") no-repeat 12px 5px;
+}
+div#menuBtn10:hover {
+	background-image:url("../../../images/mntr/gis/ico_saveOver.png");
+	color: yellow;
+}
+div#menuBtn11 {
+	background:url("../../../images/mntr/gis/ico_index.png") no-repeat 20px 4px;
+}
+div#menuBtn11:hover {
+	background-image:url("../../../images/mntr/gis/ico_indexOver.png");
+	color: yellow;
+
+}
+div#menuBtn12 {
+	background:url("../../../images/mntr/gis/ico_note.png") no-repeat 12px 5px;
+}
+div#menuBtn12:hover {
+	background-image:url("../../../images/mntr/gis/ico_noteOver.png");
+	color: yellow;
+}
+div#menuBtn13 {
+	background:url("../../../images/mntr/gis/ico_print.png") no-repeat 12px 5px;
+}
+div#menuBtn13:hover {
+	background-image:url("../../../images/mntr/gis/ico_printOver.png");
+	color: yellow;
+}
+div#menuBtn14 {
+	background:url("../../../images/mntr/gis/ico_mail.png") no-repeat 12px 7px;
+}
+div#menuBtn14:hover {
+	background-image:url("../../../images/mntr/gis/ico_mailOver.png");
+	color: yellow;
+}
+div#menuBtn15 {
+	background:url("../../../images/mntr/gis/ico_favorit.png") no-repeat 18px 5px;
+}
+div#menuBtn15:hover {
+	background-image:url("../../../images/mntr/gis/ico_favoritOver.png");
+	color: yellow;
+}
+div#menuBtn16 {
+	background:url("../../../images/mntr/gis/ico_people.png") no-repeat 20px 3px;
+}
+div#menuBtn16:hover {
+	background-image:url("../../../images/mntr/gis/ico_peopleOver.png");
+	color: yellow;
+}
+div#menuBtn17 {
+	background:url("../../../images/mntr/gis/ico_search.png") no-repeat 13px 6px;
+}
+div#menuBtn17:hover {
+	background-image:url("../../../images/mntr/gis/ico_searchOver.png");
+	color: yellow;
+}
+
+.shortcutBase {
+	border: 1px solid #9c9c9c;
+	height:48px;
+	width:54px;
+	float:left;
+	cursor: pointer;
+}
+
+div#shortcutBtn1 {
+	background: #fafafa url("../../../images/mntr/gis/ico_gisLeft1.png") no-repeat 13px 4px;
+}
+div#shortcutBtn1:hover {
+	background-image: url("../../../images/mntr/gis/ico_gisLeft1_Over.png");
+	background-color: #0c68cc;
+	color: yellow;
+}
+
+div#shortcutBtn2 {
+	background: #fafafa url("../../../images/mntr/gis/ico_gisLeft2.png") no-repeat 15px 4px;
+}
+div#shortcutBtn2:hover {
+	background-image: url("../../../images/mntr/gis/ico_gisLeft2_Over.png");
+	background-color: #0c68cc;
+	color: yellow;
+}
+
+div#shortcutBtn3 {
+	background: #fafafa url("../../../images/mntr/gis/ico_gisLeft3.png") no-repeat 12px 8px;
+}
+div#shortcutBtn3:hover {
+	background-image: url("../../../images/mntr/gis/ico_gisLeft3_Over.png");
+	background-color: #0c68cc;
+	color: yellow;
+}
+
+div#shortcutBtn4 {
+	background: #fafafa url("../../../images/mntr/gis/ico_gisLeft4.png") no-repeat 13px 4px;
+}
+div#shortcutBtn4:hover {
+	background-image: url("../../../images/mntr/gis/ico_gisLeft4_Over.png");
+	background-color: #0c68cc;
+	color: yellow;
+}
+
+input#txtScale {
+	width: 45px;
+	color: #24272c;
+	font-weight: bolder;
+	text-align: center;
+}
+
+.rightArrow {
+	border: 1px solid #9c9c9c;
+	border-left-style:none;
+	background: #fafafa url("../../../images/mntr/gis/layerBtn_Arrow.png") no-repeat 3px 20px;
+	width: 10px;
+	float: left;
+	height: 48px;
+	cursor: pointer;
+}
+
+div#realtimeBoard {
+	position: absolute;
+	left:80px;
+	top: 47px;
+	width: 350px;
+	bottom: 50px;
+	display: none;
+
+}
+
+div#searchBoard {
+	position: absolute;
+	left:80px;
+	top:47px;
+	width: 350px;
+	bottom: 50px;
+	display: none;
+
+}
+
+div#smsBoard {
+	position: absolute;
+	left:80px;
+	top:47px;
+	width: 350px;
+	bottom: 50px;
+	display: none;
+
+}
+
+div#locationBoard {
+	position: absolute;
+	left:80px;
+	top:47px;
+	width: 350px;
+	bottom: 50px;
+	display: none;
+
+}
+
+div#memoBoard {
+	position: absolute;
+	left:450px;
+	top:100px;
+	width: 400px;
+	height: 300px;
+	display: none;
+	min-height: 300px;
+
+}
+
+div#cncrTrgtBoard {
+	position: absolute;
+	left:450px;
+	top:100px;
+	width: 400px;
+	height: 300px;
+	display: none;
+	min-height: 300px;
+
+}
+
+.divPopup {
+	z-index: 100;
+	margin: 0px;
+	border: 2px solid #0c68cc;
+	border-radius: 7px;
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	-khtml-border-radius: 7px;
+	box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+	min-height: 100%;
+}
+
+.divPopupTitle {
+	color: white;
+	background-color: #0c68cc;
+	left: 0px;
+	top: 9px;
+	right: 0px;
+	height:28px;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 7px 0px 0px 10px;
+}
+
+.divPopupBody {
+	position:inherit;
+	background-color: white;
+	left:0px;
+	top: 28px;
+	right: 0px;
+	bottom: 0px;
+	padding: 3px;
+	/*min-height: 435px;*/
+	border-bottom-left-radius:7px;
+	border-bottom-right-radius:7px;
+	-webkit-border-bottom-left-radius:7px;
+	-webkit-border-bottom-right-radius:7px;
+	-moz-border-bottom-left-radius:7px;
+	-moz-border-bottom-right-radius:7px;
+	-khtml-border-bottom-left-radius:7px;
+	-khtml-border-bottom-right-radius:7px;
+}
+
+.divPopupBullet {
+	float: left;
+}
+
+.divPopupTitleNm {
+	float: left;
+	padding-left: 5px;
+}
+
+.divPopupCloseButton {
+	float: right;
+	padding-right: 10px;
+	cursor: pointer;
+}
+
+.monCondition {
+	margin: 3px;
+	left:0px;
+	top:0px;
+	right:0px;
+	height:210px;
+	border:1px solid #9f8f71;
+	background-color: #f2f2ec;
+	font-size: 12px;
+	position: inherit;
+}
+
+.monTableHeader {
+	 margin: 3px 3px 0px 3px;
+	 left: 0px;
+	 top: 215px;
+	 right: 0px;
+	 height:25px;
+	 position: inherit;
+}
+
+.monTableBody {
+	border: 1px solid #9f8f71;
+	border-top:none;
+	margin: 0px 3px 3px 3px;
+	overflow: hidden;
+	overflow-y:auto;
+	left: 0px;
+	right: 0px;
+	top: 243px;
+	bottom: 105px;
+	min-height: 100px;
+	position: inherit;
+}
+
+.monButtonGroup {
+	margin: 10px 3px 3px 3px;
+	left:0px;
+	right:0px;
+	bottom: 0px;
+	height: 100px;
+	position: inherit;
+}
+
+.monCondition p {
+	font-weight: bold;
+	width: 50px;
+	float: left;
+	padding-left: 5px;
+	vertical-align: baseline;
+}
+
+.condLine {
+	float: left;
+	width: 100%;
+	height: 22px;
+	padding-bottom: 3px;
+	
+}
+
+.contObject {
+	width: 100px;
+}
+
+div#srchSelector {
+	margin: 3px;
+	left:0px;
+	top:0px;
+	right:0px;
+	height:40px;
+	border:1px solid #9f8f71;
+	background-color: #f2f2ec;
+	font-size: 12px;
+	text-align: center;
+	position: inherit;	
+}
+
+div#srchCondition1 {
+	margin: 3px;
+	left:0px;
+	top:45px;
+	right:0px;
+	height:50px;
+	border:1px solid #9f8f71;
+	background-color: #f2f2ec;
+	font-size: 12px;
+	text-align: center;
+	position: inherit;
+}
+
+div#srchTableHeader1 {
+	 margin: 3px 3px 0px 3px;
+	 left: 0px;
+	 top: 100px;
+	 right: 0px;
+	 height:25px;
+	 position: inherit;
+}
+
+div#srchTableBody1 {
+	border: 1px solid #9f8f71;
+	border-top:none;
+	margin: 0px 3px 3px 3px;
+	overflow: hidden;
+	overflow-y:auto;
+	left: 0px;
+	right: 0px;
+	top: 128px;
+	bottom: 45px;
+	min-height: 100px;
+	position: inherit;
+}
+
+div#srchBottomGroup {
+	margin: 10px 3px 3px 3px;
+	left:0px;
+	right:0px;
+	bottom: 0px;
+	height: 40px;
+	position: inherit;
+}
+
+.divinPtag {
+	font-weight: bold;
+	width: 100%;
+	float: left;
+	padding-left: 5px;
+	vertical-align: baseline;
+}
+
+.fixed-table-header {
+	width: 100%;
+	height: 100%;
+}
+
+.fixed-table-body {
+	left: 0px;
+	top: 0px;
+	bottom: 0px;
+	right: 0px;
+	overflow: hidden;
+	overflow-y: auto;
+}
+
+.tsc_fixed_tables {
+	border: solid 1px #D5D5D5;
+	border-collapse: collapse;
+	width:100%; 
+}
+
+.tsc_fixed_tables td {
+	border:1px solid #D5D5D5;
+	font-size:12px;
+	padding:4px 0px 0px 3px;
+	height: 20px;
+}
+
+.tsc_fixed_tables tr:hover {
+	background-color: #9fcf81;
+}
+
+.tsc_fixed_tables th {
+	border-right:1px solid #D5D5D5;
+	font-size:13px;
+	font-weight: normal;
+	line-height:120%;
+	padding:4px 0px 0px 3px;
+	text-align: center;
+	background: #eee;
+	background: -moz-linear-gradient(top, #eee 0%, #ddd 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eee), color-stop(100%,#ddd));
+	background: -webkit-linear-gradient(top, #eee 0%,#ddd 100%);
+	background: -o-linear-gradient(top, #eee 0%,#ddd 100%);
+	background: -ms-linear-gradient(top, #eee 0%,#ddd 100%);
+	background: linear-gradient(top, #eee 0%,#ddd 100%);
+}
+
+img[id *= "_innerImage"]:hover { cursor:pointer; }
+
+.buttonStyle {
+	cursor: pointer;
+	height:19px;
+	width: 45px;
+	border:0; 
+	font-size:11px; 
+	padding:0px 0px 0px 0px; 
+	background-image:url("../../../images/mntr/gis/sbtn_45_blue.gif"); 
+	background-position: left top;
+	font-family: Verdana;
+	font-weight:bold;
+}
+
+div#toggleBaseLayerButtons {
+	position: absolute;
+	right: 80px;
+	top: 121px;
+	z-index: 201;
+	cursor: pointer;
+}
+
+.popTitle {
+	background-color:#7ba0e7;
+	height:20px;
+	color:white;
+	font-family: Verdana;
+	font-size:12px;
+	font-weight:bold;
+	/*vertical-align:bottom;*/
+	padding-top:2px;
+}
+.fieldName {
+	font-family: Verdana;
+	font-size:11px;
+	font-weight:bold;
+	color:#2377a7;
+	border-bottom:1px dotted #DFDFDF;
+	padding-bottom:2px;
+}
+
+.fieldValue {
+	font-family: Verdana;
+	font-size:11px;
+	color:#4f4f4f;
+	border-bottom:1px dotted #DFDFDF;
+	padding-bottom:2px;
+}
+form {
+	position: inherit;
+}

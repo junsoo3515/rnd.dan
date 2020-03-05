@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+	<!-- 프로퍼티 정보 설정 -->
+	<bean name="propertiesService" class="egovframework.rte.fdl.property.impl.EgovPropertyServiceImpl" destroy-method="destroy">
+		<property name="properties">
+			<map>
+				<entry key="pageUnit" value="10"/>
+				<entry key="pageSize" value="10"/>
+				<entry key="posblAtchFileSize" value="5242880"/>
+				<entry key="ucp.addedOptions" value="false"/>
+				<entry key="Globals.UcpId" value="${Globals.UcpId}"/>
+				<entry key="Globals.ServerIp" value="${Globals.ServerIp}"/>
+				<entry key="Globals.ServerPort" value="${Globals.ServerPort}"/>
+				<!-- 로그인 프로퍼티 -->
+				<entry key="Globals.DBEncrypt" value="${Globals.DBEncrypt}"/>
+				<entry key="Globals.SaltText" value="${Globals.SaltText}"/>
+				<!-- 관제 프로퍼티 -->
+				<entry key="Mntr.DstrtCd" value="${Mntr.DstrtCd}"/>
+				<entry key="EVT_ACTION" value="${EVT_ACTION}"/>
+				<entry key="EVT_OCR" value="${EVT_OCR}"/>
+				<!-- 경로 프로퍼티 -->
+				<entry key="Globals.BatchDirectory" value="${Globals.BatchDirectory}"/>
+				<entry key="Globals.BBSAtchFilePath" value="${Globals.BBSAtchFilePath}"/>
+				<entry key="Globals.EventUploadDirectory" value="${Globals.EventUploadDirectory}"/>
+				<entry key="Globals.EventImagesDirectory" value="${Globals.EventImagesDirectory}"/>
+				<entry key="Globals.ImageTempDirectory" value="${Globals.ImageTempDirectory}"/>
+				<entry key="Globals.CarNoImagesDirectory" value="${Globals.CarNoImagesDirectory}"/>
+				<entry key="Globals.RecognizeImagesDirectory" value="${Globals.RecognizeImagesDirectory}"/>
+				<entry key="Globals.Recognize2ImagesDirectory" value="${Globals.Recognize2ImagesDirectory}"/>
+				<entry key="Globals.UploadDirectory " value="${Globals.UploadDirectory}"/>
+				<entry key="Globals.ReqMngDirectory" value="${Globals.ReqMngDirectory}"/>
+				<entry key="Globals.MenuUploadDirectory" value="${Globals.MenuUploadDirectory}"/>
+				<entry key="Globals.FcltUploadDirectory" value="${Globals.FcltUploadDirectory}"/>
+				<!-- SMS 전송 프로퍼티 -->
+				<entry key="Globals.SmsSend" value="${Globals.SmsSend}"/>
+				<entry key="Globals.SMSSocketOpt" value="${Globals.SMSSocketOpt}"/>
+				<entry key="Globals.MsgServerPort" value="${Globals.MsgServerPort}"/>
+			</map>
+		</property>
+	</bean>
+</beans>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+    
+<mapper namespace="kr.co.ucp.dan.login.mapper.LgnLoginMapper">
+
+	<!-- 로그인 처리를 위한 resultMap -->
+	<resultMap id="login" type="kr.co.ucp.dan.login.vo.LoginVO">
+		<result property="memId" 		column="MEM_ID"/>
+		<result property="pwd" 			column="PWD"/>
+		<result property="nm" 			column="NM"/>
+		<result property="email" 		column="EMAIL"/>
+		<result property="telHp" 		column="TEL_HP"/>
+		<result property="telOffice" 	column="TEL_OFFICE"/>
+		<result property="authCd" 		column="AUTH_CD"/>
+		<result property="useFl" 		column="USE_FL"/>
+		<result property="etc" 			column="ETC"/>
+		<result property="failPwdCnt" 	column="FAIL_PWD_CNT"/>
+		<result property="regMemId" 	column="REG_MEM_ID"/>
+		<result property="regDts" 		column="REG_DTS"/>
+		<result property="modDts" 		column="MOD_DTS"/>
+	</resultMap>
+
+	<resultMap id="configure" type="kr.co.ucp.dan.login.vo.ConfigureVO">
+		<result property="networkId"   column="NETWORK_ID" />
+		<result property="networkNm"   column="NETWORK_NM" />
+		<result property="networkTy"   column="NETWORK_TY" />
+		<result property="networkIp"   column="NETWORK_IP" />
+		<result property="networkMpIp" column="NETWORK_MP_IP" />
+		<result property="regMemId"    column="REG_MEM_ID" />
+		<result property="regDts" 	   column="REG_DTS" />
+		<result property="modDts"      column="MOD_DTS" />
+		<result property="connIp"      column="CONN_IP" />
+		<result property="connDesc"    column="CONN_DESC" />
+	</resultMap>
+	
+	<!-- 아이디 찾기를 위한 resultMap -->
+	<resultMap id="id" type="kr.co.ucp.dan.login.vo.LoginVO">
+		<result property="memId" column="MEM_ID"/>
+	</resultMap>
+	
+	<!-- 비밀번호 처리를 위한 resultMap -->
+	<resultMap id="password" type="kr.co.ucp.dan.login.vo.LoginVO">
+		<result property="pwd" column="PWD"/>
+	</resultMap>
+
+	<select id="selectLogin" parameterType="java.util.HashMap" resultMap="login">
+	<![CDATA[
+		  SELECT
+		 	   CMI.MEM_SEQ
+			 , CMI.MEM_ID
+			 , CMI.PWD
+			 , CMI.NM
+			 , CMI.USE_FL
+			 , CMI.TEL_HP
+			 , CMI.EMAIL
+			 , CMI.TEL_OFFICE
+			 , CMI.AUTH_CD
+			 , CMI.ETC
+			 , CMI.FAIL_PWD_CNT
+			 , CMI.REG_MEM_ID
+			 , TO_CHAR(CMI.REG_DTS, 'YYYY-MM-DD HH24:MI:SS') AS REG_DTS
+			 , TO_CHAR(CMI.MOD_DTS, 'YYYY-MM-DD HH24:MI:SS') AS MOD_DTS
+			 , CMA.NM AS AUTH_NM
+		  FROM COM_MEM_INFO CMI, COM_MEM_AUTH CMA
+			 WHERE CMI.USE_FL 	= 'Y'
+			   AND CMI.MEM_ID 	= #{memId}
+			   AND CMI.PWD 	= #{pwd}
+			   AND CMI.AUTH_CD = CMA.AUTH_CD
+			   AND CMI.FAIL_PWD_CNT < 5
+		]]>
+	</select>
+
+	<select id="findPwd" parameterType="java.util.HashMap" resultMap="login">
+	<![CDATA[
+		SELECT
+		       MEM_SEQ
+			 , MEM_ID
+			 , PWD
+			 , NM
+			 , EMAIL
+			 , TEL_HP
+			 , TEL_OFFICE
+			 , AUTH_CD
+			 , USE_FL
+			 , ETC
+			 , FAIL_PWD_CNT
+			 , REG_MEM_ID
+			 , TO_CHAR(REG_DTS, 'YYYY-MM-DD HH24:MI:SS') AS REG_DTS
+			 , TO_CHAR(MOD_DTS, 'YYYY-MM-DD HH24:MI:SS') AS MOD_DTS
+		  FROM COM_MEM_INFO
+		 WHERE MEM_ID = #{memId}
+		   AND NM = #{nm}
+		   AND TEL_HP = #{telNHp}
+	]]>
+	</select>
+
+	<insert id="insertConnectUserCnt" parameterType="lgn" >
+		MERGE INTO COM_MEM_ALOG
+		USING (
+			SELECT COUNT(*) AS CNT FROM COM_MEM_ALOG WHERE TO_CHAR(REG_DTS, 'YYMMDD') = TO_CHAR(SYSDATE, 'YYMMDD') AND MEM_ID = #{memId}
+		) E
+		ON (
+			E.CNT > 0
+		)
+		WHEN NOT MATCHED THEN
+			INSERT (ALOG_SEQ, MNU_CD ,MEM_ID, REG_DTS)
+			VALUES( NVL((SELECT MAX(ALOG_SEQ) FROM COM_MEM_ALOG) + 1, 1)
+									, 'D0M001'
+									, #{memId}
+									, SYSDATE)
+	</insert>
+
+	<select id="selectMappingIp" parameterType="configure" resultType="configure">
+	<![CDATA[
+		SELECT CNM.NETWORK_ID
+			, CNM.NETWORK_NM
+			, CNM.NETWORK_TY
+			, CNM.NETWORK_IP
+			, CNM.NETWORK_MP_IP
+		FROM COM_NETWORK_MAPPING CNM, COM_NETWORK_MAPPING_BAND CNMB
+		WHERE '${networkIp}' LIKE REPLACE(CNMB.CONN_IP, 'x', '%')
+		AND CNM.NETWORK_ID = CNMB.NETWORK_ID
+	]]>
+	</select>
+
+	<insert id="insertSms" parameterType="java.util.HashMap">
+		<![CDATA[
+
+			INSERT INTO JWKIM
+			(
+				AAA
+			)
+			VALUES
+			(
+				#{AAA}
+			)
+
+		]]>
+	</insert>
+</mapper>

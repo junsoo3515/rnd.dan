@@ -1,0 +1,1032 @@
+@CHARSET "UTF-8";
+
+html, body{
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+	overflow: hidden;
+	font-family: '돋움',Dotum,Helvetica,'Apple SD Gothic Neo',Sans-serif;
+	font-size: 11px;
+}
+
+select {
+	font-family: '돋움',Dotum,Helvetica,'Apple SD Gothic Neo',Sans-serif;
+	font-size: 11px;
+}
+
+p {
+	margin: 0px;
+	padding: 0px;
+	font-size: 11px;
+}
+
+div#wrap {
+	position: relative;
+	height: 100%;
+}
+
+div#top_text {
+	width: 100%;
+	height: 100%;
+}
+
+div#menu{
+	left: 0px;
+	top: 0px;
+	width: 100%;	
+	height: 42px;
+	position: absolute;
+	text-align:right;
+	/*background-image: url(../../images/gis/GIS_top_menu_01.jpg);
+	background: url(../../images/gis/GIS_top_bar_01.jpg) repeat-x 0px 0px;*/
+	background-color: #9F9F9F;
+}
+
+div#menu_text{
+	position: relative;
+	width:980px;
+	height: 42px;
+	font-family: '돋움',Dotum,Helvetica,'Apple SD Gothic Neo',Sans-serif;
+	font-size: 11px;
+	display:inline-block;
+	
+}
+div#menu_text ul {
+	margin: 0px;
+	padding: 0px;
+	list-style:none;
+}
+div#menu_text li {
+	margin: 0px;
+	padding:2px;
+	width: 42px;
+	float: left;
+	color: #FFFFFF;
+}
+div#menu_text li:hover {
+	color: yellow;
+}
+.floater {
+	width:100%;
+	height:22px;
+	float:left;
+}
+.shortcutFloater {
+	width: 100%;
+	height:32px;
+}
+div#menu_text .menu_btn {
+	cursor: pointer;
+	width: 42px;
+	height: 42px;
+	
+}
+
+div#menu_text .menu_btn2 {
+	cursor: pointer;
+	width: 54px;
+	height: 42px;
+	
+}
+
+div#menu_text .menu_btn3 {
+	cursor: pointer;
+	width: 62px;
+	height: 42px;
+	
+}
+
+div#map{
+/* 	left: 0px;
+	top : 42px;
+	width: 100%;
+	bottom: 25px;
+	position: absolute;
+	z-index: 1; */
+	left: 0px;
+	top : 0px;
+	width: 1024px;
+	height: 600px;
+	position: absolute;
+	z-index: 0.5;
+	overflow: visible;
+	/* max-width:100% !important; */
+}
+
+div#tmap{
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}
+
+div#bottom {
+	left: 0px;
+	width: 100%;
+	bottom: 0px;
+	height: 25px;
+	position:absolute;
+	text-align: center;
+	z-index: 1;
+	background-image:url(../../images/gis/GIS_buttom_bar_01.jpg);
+	display:none;
+}
+
+
+div#text_bottom{
+	position:relative;
+}
+
+div#shortcut {
+	position: absolute;
+	z-index: 1000;
+	left:1px;
+	top: 42px;
+	width:68px;
+	height:250px;
+	font-family: '돋움',Dotum,Helvetica,'Apple SD Gothic Neo',Sans-serif;
+	font-size: 11px;
+	text-align: center;
+	display:none;
+}
+
+div#shortcut ul {
+	margin: 0px;
+	padding: 0px;
+	list-style:none;
+}
+
+div#shortcut li {
+	margin: 0px;
+	padding: 2px 0px 2px 0px;
+	width:68px;
+	height:48px;
+	color: #434343;
+}
+div#menuBtn1 {
+	background:url("../../images/gis/ico_move.png") no-repeat 14px 3px;
+}
+div#menuBtn1:hover {
+	background-image:url("../../images/gis/ico_moveOver.png");
+	color: yellow;
+}
+div#menuBtn2 {
+	background:url("../../images/gis/ico_plus.png") no-repeat 16px 5px;
+}
+div#menuBtn2:hover {
+	background-image:url("../../images/gis/ico_plusOver.png");
+	color: yellow;
+}
+div#menuBtn3 {
+	background:url("../../images/gis/ico_subtraction.png") no-repeat 16px 9px;
+}
+div#menuBtn3:hover {
+	background-image:url("../../images/gis/ico_subtractionOver.png");
+	color: yellow;
+}
+div#menuBtn4 {
+	background:url("../../images/gis/ico_layer.png") no-repeat 12px 4px;
+}
+div#menuBtn4:hover {
+	background-image:url("../../images/gis/ico_layerOver.png");
+	color: yellow;
+}
+div#menuBtn5 {
+	background:url("../../images/gis/ico_prew.png") no-repeat 17px 5px;
+}
+div#menuBtn5:hover {
+	background-image:url("../../images/gis/ico_prewOver.png");
+	color: yellow;
+}
+div#menuBtn6 {
+	background:url("../../images/gis/ico_next.png") no-repeat 17px 5px;
+}
+div#menuBtn6:hover {
+	background-image:url("../../images/gis/ico_nextOver.png");
+	color: yellow;
+}
+div#menuBtn7 {
+	background:url("../../images/gis/ico_reset.png") no-repeat 14px 3px;
+}
+div#menuBtn7:hover {
+	background-image:url("../../images/gis/ico_resetOver.png");
+	color: yellow;
+}
+div#menuBtn8 {
+	background:url("../../images/gis/ico_dist.png") no-repeat 12px 5px;
+}
+div#menuBtn8:hover {
+	background-image:url("../../images/gis/ico_distOver.png");
+	color: yellow;
+}
+div#menuBtn9 {
+	background:url("../../images/gis/ico_area.png") no-repeat 11px 5px;
+}
+div#menuBtn9:hover {
+	background-image:url("../../images/gis/ico_areaOver.png");
+	color: yellow;
+}
+div#menuBtn10 {
+	background:url("../../images/gis/ico_save.png") no-repeat 12px 5px;
+}
+div#menuBtn10:hover {
+	background-image:url("../../images/gis/ico_saveOver.png");
+	color: yellow;
+}
+div#menuBtn11 {
+	background:url("../../images/gis/ico_index.png") no-repeat 20px 4px;
+}
+div#menuBtn11:hover {
+	background-image:url("../../images/gis/ico_indexOver.png");
+	color: yellow;
+
+}
+div#menuBtn12 {
+	background:url("../../images/gis/ico_note.png") no-repeat 12px 5px;
+}
+div#menuBtn12:hover {
+	background-image:url("../../images/gis/ico_noteOver.png");
+	color: yellow;
+}
+div#menuBtn13 {
+	background:url("../../images/gis/ico_print.png") no-repeat 12px 5px;
+}
+div#menuBtn13:hover {
+	background-image:url("../../images/gis/ico_printOver.png");
+	color: yellow;
+}
+div#menuBtn14 {
+	background:url("../../images/gis/ico_mail.png") no-repeat 12px 7px;
+}
+div#menuBtn14:hover {
+	background-image:url("../../images/gis/ico_mailOver.png");
+	color: yellow;
+}
+div#menuBtn15 {
+	background:url("../../images/gis/ico_favorit.png") no-repeat 18px 5px;
+}
+div#menuBtn15:hover {
+	background-image:url("../../images/gis/ico_favoritOver.png");
+	color: yellow;
+}
+div#menuBtn16 {
+	background:url("../../images/gis/ico_people.png") no-repeat 20px 3px;
+}
+div#menuBtn16:hover {
+	background-image:url("../../images/gis/ico_peopleOver.png");
+	color: yellow;
+}
+
+.shortcutBase {
+	border: 1px solid #9c9c9c;
+	height:48px;
+	width:54px;
+	float:left;
+	cursor: pointer;
+}
+
+div#shortcutBtn1 {
+	background: #fafafa url("../../images/gis/ico_gisLeft1.png") no-repeat 13px 4px;
+}
+div#shortcutBtn1:hover {
+	background-image: url("../../images/gis/ico_gisLeft1_Over.png");
+	background-color: #0c68cc;
+	color: yellow;
+}
+
+div#shortcutBtn2 {
+	background: #fafafa url("../../images/gis/ico_gisLeft2.png") no-repeat 15px 4px;
+}
+div#shortcutBtn2:hover {
+	background-image: url("../../images/gis/ico_gisLeft2_Over.png");
+	background-color: #0c68cc;
+	color: yellow;
+}
+
+div#shortcutBtn3 {
+	background: #fafafa url("../../images/gis/ico_gisLeft3.png") no-repeat 12px 8px;
+}
+div#shortcutBtn3:hover {
+	background-image: url("../../images/gis/ico_gisLeft3_Over.png");
+	background-color: #0c68cc;
+	color: yellow;
+}
+
+div#shortcutBtn4 {
+	background: #fafafa url("../../images/gis/ico_gisLeft4.png") no-repeat 13px 4px;
+}
+div#shortcutBtn4:hover {
+	background-image: url("../../images/gis/ico_gisLeft4_Over.png");
+	background-color: #0c68cc;
+	color: yellow;
+}
+
+.rightArrow {
+	border: 1px solid #9c9c9c;
+	border-left-style:none;
+	background: #fafafa url("../../images/gis/layerBtn_Arrow.png") no-repeat 3px 20px;
+	width: 10px;
+	float: left;
+	height: 48px;
+	cursor: pointer;
+}
+
+.shortcutBoard {
+	position: absolute;
+	left:70px;
+	top: 45px;
+	width: 350px;
+	bottom: 50px;
+	display: none;	
+}
+div#realtimeBoard {
+	display:none;
+}
+div#memoBoard {
+	position: absolute;
+	left:480px;
+	top:150px;
+	width: 400px;
+	height: 300px;
+	display: none;
+	min-height: 300px;
+
+}
+div#memoBoardManage {
+	position: absolute;
+	left:650px;
+	top:300px;
+	width: 300px;
+	height: 100px;
+	display: none;
+}
+div#cncrTrgtBoard {
+	position: absolute;
+	left:450px;
+	top:100px;
+	width: 400px;
+	height: 300px;
+	display: none;
+	min-height: 300px;
+
+}
+
+tbody#cncrTrgtList td {
+	text-align: center;
+}
+
+tbody#cncrTrgtList td:nth-child(3) {
+	text-align: left;
+	padding-left: 5px;
+}
+
+div#spclPbtrBoard {
+	position: absolute;
+	left:450px;
+	top:200px;
+	width: 500px;
+	height: 400px;
+	display: none;
+	min-height: 300px;	
+}
+
+div#statusBoard {
+	position: absolute;
+	left:400px;
+	top:250px;
+	width: 500px;
+	height: 400px;
+	display: none;
+	min-height: 300px;	
+}
+
+tbody#realPop2List td {
+	text-align: center;
+}
+tbody#realPop2List td:nth-child(2) {
+	text-align: left;
+	padding-left:5px;
+}
+
+div#nosigBoard {
+	position: absolute;
+	left:350px;
+	top:150px;
+	width: 500px;
+	height: 400px;
+	display: none;
+	min-height: 300px;	
+}
+
+tbody#nosigList td:nth-child(1) {
+	text-align: center;
+}
+
+tbody#nosigList td:nth-child(4) {
+	text-align: center;
+}
+
+div#istlBoard {
+	position: absolute;
+	left:300px;
+	top:300px;
+	width: 500px;
+	height: 400px;
+	display: none;
+	min-height: 300px;	
+}
+
+div#immgBoard {
+	position: absolute;
+	left:500px;
+	top:310px;
+	width: 500px;
+	height: 400px;
+	display: none;
+	min-height: 300px;	
+}
+
+
+div#qryPbtrBoard {
+	position: absolute;
+	left:450px;
+	top:100px;
+	width: 550px;
+	height: 400px;
+	display: none;
+	min-height: 300px;
+	z-index:1001;
+}
+
+div#layerSetBoard {
+	position: absolute;
+	left:440px;
+	top:60px;
+	width: 200px;
+	height: 200px;
+	display: none;
+	min-height: 100px;
+}
+
+div#obsLegend {
+	position: absolute;
+	right:0px;
+	bottom:25px;
+	width: 140px;
+	height: 140px;
+	min-height: 100px;
+	display: none;
+}
+
+.olPopup {
+	visibility: hidden;
+}
+
+.divPopup {
+	z-index: 1000;
+	margin: 0px;
+	border: 2px solid #0c68cc;
+	border-radius: 7px;
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	-khtml-border-radius: 7px;
+	box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+	visibility: hidden;
+}
+
+.divPopupN {
+	z-index: 1000;
+	margin: 0px;
+	border: 2px solid #0c68cc;
+	border-radius: 7px;
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	-khtml-border-radius: 7px;
+	box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+	min-height: 480px;
+	visibility: hidden;
+}
+
+.divPopupTitle {
+	color: white;
+	background-color: #0c68cc;
+	left: 0px;
+	top: 9px;
+	right: 0px;
+	height:28px;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 7px 0px 0px 10px;
+	cursor: move;
+}
+
+.divPopupTitleN {
+	color: white;
+	background-color: #0c68cc;
+	left: 0px;
+	top: 9px;
+	right: 0px;
+	height:28px;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 7px 0px 0px 10px;
+}
+
+.divMenuSelector {
+	position:inherit;
+	background-color: white;
+	left:0px;
+	top: 28px;
+	right: 0px;
+	height: 24px;
+	padding: 3px;
+}
+
+.divPopupBody {
+	position:inherit;
+	background-color: white;
+	left:0px;
+	top: 28px;
+	right: 0px;
+	bottom: 0px;
+	padding: 3px;
+	/*min-height: 435px;*/
+	border-bottom-left-radius:7px;
+	border-bottom-right-radius:7px;
+	-webkit-border-bottom-left-radius:7px;
+	-webkit-border-bottom-right-radius:7px;
+	-moz-border-bottom-left-radius:7px;
+	-moz-border-bottom-right-radius:7px;
+	-khtml-border-bottom-left-radius:7px;
+	-khtml-border-bottom-right-radius:7px;
+}
+
+
+
+.divPopupBullet {
+	float: left;
+}
+
+.divPopupTitleNm {
+	float: left;
+	padding-left: 5px;
+}
+
+.divPopupCloseButton {
+	float: right;
+	padding-right: 10px;
+	cursor: pointer;
+}
+
+.divPopupCloseButtonN {
+	float: right;
+	padding-right: 10px;
+	cursor: pointer;
+}
+
+.monCondition {
+	margin: 3px;
+	left:0px;
+	top:0px;
+	right:0px;
+	height:210px;
+	border:1px solid #9f8f71;
+	background-color: #f2f2ec;
+	font-size: 12px;
+	position: inherit;
+}
+
+.monCondition p {
+	font-weight: bold;
+	width: 60px;
+	float: left;
+	height: 20px;
+}
+
+.monTableHeader {
+	 margin: 3px 3px 0px 3px;
+	 left: 0px;
+	 top: 215px;
+	 right: 0px;
+	 height:25px;
+	 position: inherit;
+}
+
+.monTableBody {
+	border: 1px solid #9f8f71;
+	border-top:none;
+	margin: 0px 3px 3px 3px;
+	overflow: hidden;
+	overflow-y:auto;
+	left: 0px;
+	right: 0px;
+	top: 243px;
+	bottom: 105px;
+	min-height: 100px;
+	position: inherit;
+	background-color:#FFFFFF;
+}
+
+.monBottomGroup {
+	margin: 10px 3px 3px 3px;
+	left:0px;
+	right:0px;
+	bottom: 0px;
+	height: 100px;
+	position: inherit;
+}
+
+.monBottomGroup p {
+	float:left;
+}
+
+.monBottomGroup2 {
+	margin: 10px 3px 3px 3px;
+	left:0px;
+	right:0px;
+	bottom: 0px;
+	height: 100px;
+	position: inherit;
+}
+.condLine {
+	float: left;
+	width: 100%;
+	height: 24px;
+	padding: 2px 0px 2px 5px;
+	line-height: 20px;
+}
+
+.condLine p {
+	position: inherit;
+}
+.condLine p span {
+	color:#989898;
+}
+.label {
+	padding-top:2px;
+	height: 18px;
+}
+.contObject {
+	width: 100px;
+}
+
+/* div#srchSelector {
+	margin: 3px;
+	left:0px;
+	top:0px;
+	right:0px;
+	height:40px;
+	border:1px solid #9f8f71;
+	background-color: #f2f2ec;
+	font-size: 12px;
+	text-align: center;
+	position: inherit;	
+} */
+
+div#srchCondition1 {
+	margin: 3px;
+	left:0px;
+	top:45px;
+	right:0px;
+	height:50px;
+	border:1px solid #9f8f71;
+	background-color: #f2f2ec;
+	font-size: 12px;
+	text-align: center;
+	position: inherit;
+}
+
+div#srchTableHeader1 {
+	 margin: 3px 3px 0px 3px;
+	 left: 0px;
+	 top: 100px;
+	 right: 0px;
+	 height:25px;
+	 position: inherit;
+}
+
+div#srchTableBody1 {
+	border: 1px solid #9f8f71;
+	border-top:none;
+	margin: 0px 3px 3px 3px;
+	overflow: hidden;
+	overflow-y:auto;
+	left: 0px;
+	right: 0px;
+	top: 128px;
+	bottom: 45px;
+	min-height: 100px;
+	position: inherit;
+}
+
+
+.divinPtag {
+	font-weight: bold;
+	width: 100%;
+	float: left;
+	padding-left: 5px;
+	vertical-align: baseline;
+}
+
+.fixed-table-header {
+	width: 100%;
+	height: 100%;
+}
+
+.fixed-table-body {
+	left: 0px;
+	top: 0px;
+	bottom: 0px;
+	right: 0px;
+	overflow: hidden;
+	overflow-y: auto;
+}
+
+.tsc_fixed_tables {
+	border: solid 1px #D5D5D5;
+	border-collapse: collapse;
+	width:100%;
+	table-layout:fixed;
+}
+
+.tsc_fixed_tables td {
+	border:1px solid #D5D5D5;
+	font-size:11px;
+	padding:4px 0px 0px 2px;
+	height: 20px;
+}
+
+.tsc_fixed_tables tr:hover {
+	background-color: #f9fcb6;
+}
+
+.tsc_fixed_tables th {
+	border-right:1px solid #D5D5D5;
+	font-size:11px;
+	font-weight: normal;
+	line-height:120%;
+	padding:4px 0px 0px 0px;
+	text-align: center;
+	background: #eee;
+	background: -moz-linear-gradient(top, #eee 0%, #ddd 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eee), color-stop(100%,#ddd));
+	background: -webkit-linear-gradient(top, #eee 0%,#ddd 100%);
+	background: -o-linear-gradient(top, #eee 0%,#ddd 100%);
+	background: -ms-linear-gradient(top, #eee 0%,#ddd 100%);
+	background: linear-gradient(top, #eee 0%,#ddd 100%);
+}
+
+tbody#srch1list td:nth-child(1){
+	text-align: center;
+}
+
+tbody#srch1list td:nth-child(2){
+	padding-left: 10px;
+}
+
+tbody#srch2list td:nth-child(1){
+	text-align: center;
+}
+
+tbody#srch2list td:nth-child(2){
+	padding-left: 10px;
+}
+
+tbody#srch3list td:nth-child(1){
+	text-align: center;
+}
+
+tbody#srch3list td:nth-child(2){
+	padding-left: 10px;
+}
+
+tbody#sms1AlrtList td:nth-child(2){
+	padding-left: 10px;
+}
+
+tbody#srch4list td{
+	text-align: center;
+}
+
+tbody#qryPbtrBoard_list td{
+	text-align: center;
+}
+
+tbody#sms1List td:nth-child(1){
+	text-align: center;
+}
+
+tbody#sms1List td:nth-child(2){
+	padding-left: 10px;
+}
+
+tbody#loc4List td{
+	text-align: center;
+}
+
+
+
+tbody#qryPbtrBoard_list td:nth-child(6){
+	text-align: left;
+	padding-left: 10px;
+}
+
+tbody#realPop5List td {
+	text-align: center;
+}
+
+tbody#realPop5List td:nth-child(5) {
+	text-align: left;
+}
+
+tbody#spclPbtrList td {
+	text-align: center;
+}
+
+tbody#spclPbtrList td:nth-child(2) {
+	cursor: pointer;
+}
+/*img[id *= "_innerImage"]:hover { cursor:pointer; }*/
+
+.buttonStyle {
+	cursor: pointer;
+	height:19px;
+	width: 45px;
+	border:0; 
+	font-size:11px;
+	color: #FFFFFF;
+	padding:0px 0px 0px 0px; 
+	background-image:url("../../images/gis/sbtn_45_blue.gif"); 
+	background-position: left top;
+	font-family: 돋움;
+	font-weight:bold;
+}
+
+.buttonQueryStyle {
+	background-image:url("../../images/gis/btn_icon_search.gif");
+	cursor: pointer;
+	background-repeat: no-repeat;
+	/*background-color: transparent;*/
+	background-position:left top;
+	border: 0px;
+	padding: 0px;
+	height: 18px;
+	width: 18px;
+}
+
+div#toggleBaseLayerButtons {
+	position: absolute;
+	right: 80px;
+	top: 55px;
+	z-index: 2010;
+	cursor: pointer;
+	display: none;
+}
+
+.popTitle {
+	background-color:#7ba0e7;
+	height:20px;
+	color:white;
+	font-family: 맑은 고딕;
+	font-size:12px;
+	font-weight:bold;
+	/*vertical-align:bottom;*/
+	padding-top:2px;
+}
+.fieldName {
+	font-family: 맑은 고딕;
+	font-size:11px;
+	font-weight:bold;
+	color:#2377a7;
+	border-bottom:1px dotted #DFDFDF;
+	padding-bottom:2px;
+}
+
+.fieldValue {
+	font-family: 맑은 고딕;
+	font-size:11px;
+	color:#4f4f4f;
+	border-bottom:1px dotted #DFDFDF;
+	padding-bottom:2px;
+}
+form {
+	position: inherit;
+}
+
+.detailPopupWrapDiv {
+	border: 1px solid #9f8f71;
+	background-color: #f6f6f4;
+	width:315px;
+	height:150px;
+	padding: 5px;
+	clear: both;
+}
+.detailPopupImage {
+	width:110px;
+	height:110px;
+	float:left;
+	/* border: 1px solid #7f7f7f; */
+	overflow: hidden;
+}
+.detailPopupFieldName {
+	width:80px;
+	height:110px;
+	float:left;
+	font-weight:bold;
+	font-size:10pt;
+	line-height: 13pt;
+	color:#4F4F4F;
+}
+.detailPopupValue {
+	width:120px;
+	height:110px;
+	float:left;
+	font-size:10pt;
+	line-height: 13pt;
+	color:#4F4F4F;
+}
+
+.detailPopupFieldName p {
+	height: 15px;
+	padding: 0px;
+	border-bottom: 1px solid #f2f2ec;
+}
+
+.detailPopupValue p {
+	height: 15px;
+	padding: 0px;
+	border-bottom: 1px dotted #c8c8c8;
+}
+
+input[type=text] {
+	height: 12px;
+	width: 90px;
+	font-size: 11px;
+	font-family: 돋움;
+}
+
+.calendarField {
+	background-image:url("../../images/gis/btn_icon_calendar.gif");
+	background-repeat: no-repeat;
+	background-position:right top;
+}
+
+textarea {
+	font-size: 11px;
+	font-family: 돋움;
+}
+
+.pButtons {
+	cursor: pointer;
+}
+
+.indexmap {
+	top:48px;
+	right:195px;
+	width:400px;
+	height:23px;
+	z-index: 1000;
+	margin: 0px;
+	padding: 6px 5px 2px 8px;
+	
+	/*border: 2px solid #0c68cc;*/
+	border-radius: 7px;
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	-khtml-border-radius: 7px;
+	box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+	background-color: #d9d9d9;
+	position: absolute;
+	font-size: 11px;
+	font-family: 돋움;
+	display: none;
+}
+
+#loading {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 30px;
+	height: 30px;
+	z-index:3000;
+}
+
+.mapLegend {
+	width:10px;
+	height: 10px;
+	border: 1px #FF0000 solid;
+	background-color: orange;
+}
+
+.spcltextarea {
+	 overflow-x:hidden;
+	 overflow-y:auto;
+	 width:390px;
+	 height:80px;
+}
+.excel {
+	cursor: pointer;
+	width: 22px;
+	height: 22px;
+}

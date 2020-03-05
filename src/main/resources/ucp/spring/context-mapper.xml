@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:/ucp/sqlmap/sql-mapper-config.xml" />
+		<property name="mapperLocations" value="classpath:/ucp/sqlmap/mappers/**/*.xml" />
+	</bean>
+
+	<!-- MapperConfigurer setup for MyBatis Database Layer with @Mapper("deptMapper") in DeptMapper Interface -->
+ 	<!--   bean class="egovframework.rte.psl.dataaccess.mapper.MapperConfigurer">
+		<property name="basePackage" value="kr.co.ucp.**.service.impl" />
+	</bean -->
+	
+	<bean id="sqlSession-sms" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource-sms"/>
+        <property name="configLocation" value="classpath:/ucp/sqlmap/sql-mapper-config-sms.xml" />
+	</bean>
+	
+	<!-- MapperConfigurer setup for MyBatis Database Layer with @Mapper("deptMapper") in DeptMapper Interface -->
+ 	<bean class="egovframework.rte.psl.dataaccess.mapper.MapperConfigurer">
+		<property name="basePackage" value="kr.co.ucp.dan.**.mapper" />
+	</bean>
+
+</beans>

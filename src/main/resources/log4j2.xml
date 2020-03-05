@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<properties>
+
+		<property name="log-path">C:\Users\user\Desktop\logs\</property>
+		<property name="log-file-nm">danFclt_web</property>
+	</properties>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %5p [%c] %m%n" />
+        </Console>
+		<RollingFile name="file" fileName="${log-path}/${log-file-nm}.log" filePattern="${log-path}/previous/${log-file-nm}_%d{yyyy-MM-dd}.log">
+			<PatternLayout pattern="%d %5p [%c::%M] %m%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy max="30" />
+		</RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="java.sql" level="INFO" additivity="false">
+            <AppenderRef ref="console" />
+			<AppenderRef ref="file"/>
+        </Logger>
+        <Logger name="egovframework" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+			<AppenderRef ref="file"/>
+        </Logger>
+        <Logger name="kr.co.ucp" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+			<AppenderRef ref="file"/>
+        </Logger>
+          <!-- log SQL with timing information, post execution -->
+        <Logger name="jdbc.sqltiming" level="INFO" additivity="false">
+            <AppenderRef ref="console" />
+			<AppenderRef ref="file"/>
+        </Logger>
+        <Logger name="org.springframework" level="INFO" additivity="false">
+            <AppenderRef ref="console" />
+			<AppenderRef ref="file"/>
+        </Logger>
+		<logger name="*Mapper" level="DEBUG" additivity="false">
+			<appender-ref ref="console" />
+			<AppenderRef ref="file"/>
+		</logger>
+		<logger name="*DAO" level="DEBUG" additivity="false">
+			<appender-ref ref="console" />
+			<AppenderRef ref="file"/>
+		</logger>
+        <Root level="DEBUG">
+            <AppenderRef ref="console" />
+			<AppenderRef ref="file"/>
+        </Root>
+    </Loggers>
+</Configuration>

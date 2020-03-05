@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC 
+    "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1//EN" 
+    "http://jakarta.apache.org/commons/dtds/validator_1_1.dtd">
+
+<form-validation>
+
+    <formset>
+        <form name="sampleVO">
+        	<field property="name" depends="required">
+        		<arg0 key="title.sample.name" />
+			</field>
+			<field property="description" depends="required">
+                <arg0 key="title.sample.description" />
+            </field>
+        	<field property="regUser" depends="required">
+        		<arg0 key="title.sample.regUser" />
+			</field>
+        </form>
+    </formset>
+
+    <formset>
+        <form name="fcltReprsntSttusVO">
+			<field property="fcltGubun" depends="required">
+                <arg0 key="시설물구분" resource="false"/>
+            </field>
+			<field property="sttusNm" depends="required">
+                <arg0 key="상태명" resource="false"/>
+            </field>
+			<field property="sttusVal" depends="required">
+                <arg0 key="상태값" resource="false"/>
+            </field>
+			<field property="sttusGubun" depends="required">
+                <arg0 key="대표상태구분" resource="false"/>
+            </field>
+        </form>
+    </formset>
+    
+    <formset>
+        <form name="cctvVO">
+			<field property="fcltLblNm" depends="required">
+                <arg0 key="시설물명" resource="false"/>
+            </field>
+			<field property="sysCd" depends="required">
+                <arg0 key="서비스명" resource="false"/>
+            </field>
+			<field property="fcltKndCd" depends="required">
+                <arg0 key="종류" resource="false"/>
+            </field>
+			<field property="fcltUsedTyCd" depends="required">
+                <arg0 key="종류" resource="false"/>
+            </field>
+			<field property="sigunguCd" depends="required">
+                <arg0 key="시군구" resource="false"/>
+            </field>
+			<field property="pointX" depends="required">
+                <arg0 key="좌표X" resource="false"/>
+            </field>
+			<field property="pointY" depends="required">
+                <arg0 key="좌표Y" resource="false"/>
+            </field>
+			<field property="useTyCd" depends="required">
+                <arg0 key="사용유형" resource="false"/>
+            </field>
+        </form>
+    </formset>
+
+    <formset>
+        <form name="bookmarkVO">
+			<field property="bookmarkNm" depends="required">
+                <arg0 key="즐겨찾기명" resource="false"/>
+            </field>
+        </form>
+    </formset>
+    
+   
+    <formset>
+        <form name="mntrgAreaVO">
+			<field property="mntrgAreaNm" depends="required">
+                <arg0 key="감시지역명" resource="false"/>
+            </field>
+        </form>
+    </formset> 
+
+</form-validation>

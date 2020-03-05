@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+	    <setting name="callSettersOnNulls" 	value="true"/>
+	    <setting name="jdbcTypeForNull" 	value="NULL"/> 
+	</settings>
+    <typeAliases>
+		<typeAlias alias="egovMap" 	type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+		
+		<!-- MNTR -->
+		<typeAlias alias="lgn" 		type="kr.co.ucp.dan.login.vo.LoginVO"/>
+		<typeAlias alias="event" 	type="kr.co.ucp.dan.monitor.main.vo.EventVO"/>
+		<typeAlias alias="es" 		type="kr.co.ucp.dan.monitor.main.vo.EsVO"/>
+		<typeAlias alias="cmmCode" 	type="kr.co.ucp.dan.monitor.cmm.vo.CmmCodeVO"/>
+		<typeAlias alias="configure" type="kr.co.ucp.dan.login.vo.ConfigureVO"/>
+		<typeAlias alias="danFclt" type="kr.co.ucp.dan.monitor.main.vo.DanFcltVO"/>
+		<typeAlias alias="danFcltManager" type="kr.co.ucp.dan.monitor.main.vo.DanFcltManagerVO"/>
+		<typeAlias alias="sms" type="kr.co.ucp.dan.monitor.main.vo.SmsVO"/>
+		<typeAlias alias="comCode" type="kr.co.ucp.dan.monitor.main.vo.ComCodeVO"/>
+    </typeAliases>
+</configuration>

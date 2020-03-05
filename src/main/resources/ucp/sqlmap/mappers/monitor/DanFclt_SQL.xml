@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.ucp.dan.monitor.main.mapper.DanFcltMapper">
+	<select id="selectEventKindList" parameterType="event" resultType="egovMap">
+		/* selectEventKindList */
+		SELECT DISTINCT
+			CC.COM_CD
+		  , CC.CD_NM
+		  , CC.SORT_SEQ
+		FROM COM_EVENT_USER_AUTH CEUA, COM_CODE CC
+		WHERE 1=1
+		AND CC.COM_CD = CEUA.EVT_ID
+		AND CEUA.USE_FL = 'Y'
+		AND CEUA.MEM_ID = #{userId}
+		AND CC.USE_FL = 'Y'
+		AND CC.COM_CD = '119UC001'
+		AND CC.JONG_CD = 'ET'
+		ORDER BY CC.SORT_SEQ, CC.COM_CD
+	</select>
+
+	<!-- 위험시설물 지도에 뿌리기-->
+	<select id="selectDanFcltGeoData" parameterType="danFclt" resultType="egovMap">
+		/* selectDanFcltGeoData */
+		<![CDATA[
+		SELECT
+			DF.FAC_SEQ AS FAC_SEQ,
+			DF.FAC_CD AS FAC_CD,
+			DF.TYPE_CD AS TYPE_CD,
+			(SELECT CD_NM FROM COM_CODE WHERE DF.TYPE_CD = COM_CD AND rownum = 1) AS TYPE_NM,
+			DF.FAC_NM AS FAC_NM,
+			DF.ADDR AS ADDR,
+			DF.POINT_X AS POINT_X,
+			DF.POINT_Y AS POINT_Y,
+			(SELECT CM.NM FROM COM_MANAGER CM, DAN_FACILITY_MANAGER DFM WHERE CM.CM_SEQ = DFM.CM_SEQ AND DF.FAC_SEQ = DFM.FAC_SEQ AND rownum = 1) AS NM,
+			(SELECT CM.HP FROM COM_MANAGER CM, DAN_FACILITY_MANAGER DFM WHERE CM.CM_SEQ = DFM.CM_SEQ AND DF.FAC_SEQ = DFM.FAC_SEQ AND rownum = 1) AS HP,
+			(SELECT CM.EMAIL FROM COM_MANAGER CM, DAN_FACILITY_MANAGER DFM WHERE CM.CM_SEQ = DFM.CM_SEQ AND DF.FAC_SEQ = DFM.FAC_SEQ AND rownum = 1) AS EMAIL
+		FROM
+			DAN_FACILITY DF
+		WHERE
+			1=1
+		AND  POINT_X IS NOT NULL AND POINT_X != 0
+		AND  POINT_X IS NOT NULL AND POINT_Y != 0
+			]]>
+		<if test="searchDanFcltType != null and searchDanFcltType != ''">
+			AND DF.TYPE_CD = #{searchDanFcltType}
+		</if>
+		<if test="searchExcludeDanFcltType != null and searchExcludeDanFcltType != ''">
+			AND ( DF.TYPE_CD NOT IN (${searchExcludeDanFcltType}) OR DF.TYPE_CD IS NULL )
+		</if>
+		<if test="searchFacCd != null and searchFacCd != ''">
+			AND REGEXP_LIKE(DF.FAC_CD || FAC_NM || ADDR, #{searchFacCd})
+		</if>
+		<if test="bbox != ''">
+			AND	POINT_X BETWEEN #{minX} AND #{maxX}
+			AND	POINT_Y BETWEEN #{minY} AND #{maxY}
+		</if>
+	</select>
+
+	<!-- 지도의 미완된 이벤트 목록 -->
+	<select id="selectUnfinishedEventGeoData" parameterType="danFclt" resultType="egovMap">
+		/* selectUnfinishedEventGeoData */
+		SELECT
+		CEO.EVT_OCR_NO
+		, CEO.EVT_ID
+		, CC.CD_NM AS EVT_NM
+		, CEO.EVT_GRAD_CD
+		, CEO.EVT_PRGRS_CD
+		, CEO.EVT_PLACE
+		, CEO.POINT_X
+		, CEO.POINT_Y
+		, CEO.EVT_DTL
+		, TO_CHAR(TO_DATE(CEO.EVT_OCR_YMD_HMS, 'YYYYMMDDHH24MISS'), 'MM-DD HH24:MI:SS') AS EVT_OCR_YMD_HMS
+		, CEO.IMG_URL
+		, (ROW_NUMBER() OVER(PARTITION BY CEO.POINT_X,  CEO.POINT_Y ORDER BY  CEO.EVT_OCR_YMD_HMS  DESC )) AS LBL_FCLT
+		FROM COM_EVENT_OCR CEO, DAN_USER_EVENT DUE, COM_CODE CC
+		WHERE 1=1
+		<![CDATA[
+			/* 화재이벤트만 가져오기 */
+			AND CEO.EVT_ID_SUB_CD = '화재'
+			AND CEO.EVT_ID = '119UC001'
+			AND DUE.EVT_OCR_NO = CEO.EVT_OCR_NO
+			AND CEO.EVT_ID = CC.COM_CD
+			AND CC.JONG_CD = 'ET'
+			AND CC.USE_FL = 'Y'
+			AND CEO.EVT_PRGRS_CD < '90'
+			AND CEO.POINT_X BETWEEN ${boundsLeft} AND ${boundsRight}
+			AND CEO.POINT_Y BETWEEN ${boundsBottom} AND ${boundsTop}
+			]]>
+		<if test="bbox != '' ">
+			AND	CEO.POINT_X BETWEEN ${minX} AND ${maxX}
+			AND	CEO.POINT_Y BETWEEN ${minY} AND ${maxY}
+		</if>
+	</select>
+
+
+
+	<!-- 현좌표에서 근접한 위험시설물 목록 카운트 -->
+	<select id="selectNearestDanFcltListTotCnt" parameterType="danFclt" resultType="int">
+		/* selectNearestDanFcltListTotCnt */
+		SELECT COUNT(*) AS TOTCNT
+		FROM (
+		SELECT
+			DF.FAC_SEQ AS FAC_SEQ,
+			DF.FAC_CD AS FAC_CD,
+			DF.FAC_NM AS FAC_NM,
+			DF.POINT_X AS POINT_X,
+			DF.POINT_Y AS POINT_Y,
+		 ( 6371 * ACOS( TRUNC(
+		COS( ( ASIN(1) * 2 ) / 180 * #{pointY} )
+		* COS( ( ASIN(1) * 2 ) / 180 * ( DF.POINT_Y ) )
+		* COS( ( ( ASIN(1) * 2 ) / 180 * #{pointX} ) - ( ( ASIN(1) * 2 ) / 180 * DF.POINT_X ) )
+		+ SIN( ( ASIN(1) * 2 ) / 180 * #{pointY} )
+		* SIN( ( ASIN(1) * 2 ) / 180 * ( DF.POINT_Y ) ) ,16)
+		) ) AS DISTANCE,
+		 	DF.TYPE_CD AS TYPE_CD,
+			(SELECT CD_NM FROM COM_CODE WHERE DF.TYPE_CD = COM_CD) AS TYPE_NM,
+			(SELECT CM.NM FROM COM_MANAGER CM, DAN_FACILITY_MANAGER DFM WHERE CM.CM_SEQ = DFM.CM_SEQ AND DF.FAC_SEQ = DFM.FAC_SEQ) AS NM,
+			(SELECT CM.HP FROM COM_MANAGER CM, DAN_FACILITY_MANAGER DFM WHERE CM.CM_SEQ = DFM.CM_SEQ AND DF.FAC_SEQ = DFM.FAC_SEQ) AS HP,
+			DF.ADDR
+		FROM
+			DAN_FACILITY DF
+		WHERE 1=1
+		<if test="danFcltCtlUsedTyList != null">
+			AND DF.TYPE_CD IN
+			<foreach item="danFcltCtlUsedTy" index="index" collection="danFcltCtlUsedTyList" open="(" separator="," close=")">
+				#{danFcltCtlUsedTy.danFcltUsedTyCd}
+			</foreach>
+		</if>
+		<if test="searchFcltLblNm != null and searchFcltLblNm != '' ">
+			AND DF.FAC_NM LIKE '%${searchFcltLblNm}%'
+		</if>
+		) INNER
+		WHERE 1=1
+		<if test="searchRadius != null and searchRadius != '' ">
+			<![CDATA[
+			AND INNER.DISTANCE <= #{searchRadius}
+			]]>
+		</if>
+	</select>
+
+	<!-- 현좌표에서 근접한 위험시설물 목록 -->
+	<select id="selectNearestDanFcltList" parameterType="danFclt" resultType="egovMap">
+		/* selectNearestDanFcltList */
+		SELECT * FROM (
+		SELECT
+		ROWNUM RNUM
+		,INNER.* FROM (
+		SELECT
+			DF.FAC_SEQ AS FAC_SEQ,
+			DF.FAC_CD AS FAC_CD,
+			DF.FAC_NM AS FAC_NM,
+			DF.TYPE_CD AS TYPE_CD,
+			(SELECT CD_NM FROM COM_CODE WHERE DF.TYPE_CD = COM_CD) AS TYPE_NM,
+			(SELECT CM.NM FROM COM_MANAGER CM, DAN_FACILITY_MANAGER DFM WHERE CM.CM_SEQ = DFM.CM_SEQ AND DF.FAC_SEQ = DFM.FAC_SEQ) AS NM,
+			(SELECT CM.HP FROM COM_MANAGER CM, DAN_FACILITY_MANAGER DFM WHERE CM.CM_SEQ = DFM.CM_SEQ AND DF.FAC_SEQ = DFM.FAC_SEQ) AS HP,
+			DF.ADDR AS ADDR,
+		<![CDATA[
+						DF.ADDR  AS PORTAL_ADRES,
+						]]>
+			 (SELECT CD_NM FROM COM_CODE WHERE DF.TYPE_CD = COM_CD) AS TYPE_NM,
+			 DF.POINT_X AS POINT_X,
+			 DF.POINT_Y AS POINT_Y,
+		 ( 6371 * ACOS( TRUNC(
+		COS( ( ASIN(1) * 2 ) / 180 * #{pointY} )
+		* COS( ( ASIN(1) * 2 ) / 180 * ( DF.POINT_Y ) )
+		* COS( ( ( ASIN(1) * 2 ) / 180 * #{pointX} ) - ( ( ASIN(1) * 2 ) / 180 * DF.POINT_X ) )
+		+ SIN( ( ASIN(1) * 2 ) / 180 * #{pointY} )
+		* SIN( ( ASIN(1) * 2 ) / 180 * ( DF.POINT_Y ) ) ,16)
+		) ) AS DISTANCE,
+		 	DF.TYPE_CD AS TYPE_CD
+		FROM DAN_FACILITY DF
+		WHERE 1=1
+		<if test="danFcltCtlUsedTyList != null">
+			AND DF.TYPE_CD IN
+			<foreach item="danFcltCtlUsedTy" index="index" collection="danFcltCtlUsedTyList" open="(" separator="," close=")">
+				#{danFcltCtlUsedTy.danFcltUsedTyCd}
+			</foreach>
+		</if>
+		<if test="searchFcltLblNm != null and searchFcltLblNm != '' ">
+			AND DF.FAC_NM LIKE '%${searchFcltLblNm}%'
+		</if>
+		ORDER BY DISTANCE ASC
+		) INNER
+		WHERE 1=1
+		<if test="searchRadius != null and searchRadius != '' ">
+			<![CDATA[
+				AND INNER.DISTANCE <= #{searchRadius}
+				]]>
+		</if>
+		<![CDATA[
+				AND	ROWNUM <= #{lastIndex}
+			)
+			WHERE 1=1
+			AND	RNUM >= #{firstIndex}
+		]]>
+	</select>
+
+
+	<select id="selectDanFcltUsedTy" resultType="egovMap">
+		SELECT
+			*
+		FROM
+			COM_CODE CC
+		WHERE 1=1
+		AND	CC.JONG_CD = 'TY'
+		AND	CC.USE_FL = 'Y'
+		<if test="danFcltCtlUsedTyList != null">
+			AND CC.COM_CD IN
+			<foreach item="danFcltCtlUsedTy" index="index" collection="danFcltCtlUsedTyList" open="(" separator="," close=")">
+				#{danFcltCtlUsedTy.danFcltUsedTyCd}
+			</foreach>
+			)
+		</if>
+	</select>
+
+	<select id="selectDanFcltUsedTyAll" resultType="egovMap">
+		SELECT
+			*
+		FROM
+			COM_CODE CC
+		WHERE 1=1
+		AND CC.JONG_CD = 'TY'
+		AND CC.USE_FL = 'Y'
+	</select>
+
+	<!-- 현좌표에서 근접한 위험시설물 5개 -->
+	<select id="selectNearestDanFcltForCastNet" parameterType="danFclt" resultType="egovMap">
+		/* selectNearestDanFcltForCastNet */
+		<![CDATA[
+		SELECT * FROM (
+			SELECT
+				DF.FAC_CD,
+				DF.FAC_NM,
+				DF.POINT_X,
+				DF.POINT_Y,
+				DF.TYPE_CD,
+				(SELECT CD_NM FROM COM_CODE WHERE DF.TYPE_CD = COM_CD) AS TYPE_NM,
+				(SELECT CM.NM FROM COM_MANAGER CM, DAN_FACILITY_MANAGER DFM WHERE CM.CM_SEQ = DFM.CM_SEQ AND DF.FAC_SEQ = DFM.FAC_SEQ) AS NM,
+				(SELECT CM.HP FROM COM_MANAGER CM, DAN_FACILITY_MANAGER DFM WHERE CM.CM_SEQ = DFM.CM_SEQ AND DF.FAC_SEQ = DFM.FAC_SEQ) AS HP,
+				DF.ADDR
+				, (ROW_NUMBER() OVER(PARTITION BY DF.POINT_X,  DF.POINT_Y ORDER BY  DF.FAC_NM  ASC )) AS FCLT_PRIORITY
+				, ( 6371 * ACOS( TRUNC(
+					COS( ( ASIN(1) * 2 ) / 180 * #{pointY} )
+					* COS( ( ASIN(1) * 2 ) / 180 * DF.POINT_Y )
+					* COS( ( ( ASIN(1) * 2 ) / 180 * #{pointX} ) - ( ( ASIN(1) * 2 ) / 180 * DF.POINT_X ) )
+					+ SIN( ( ASIN(1) * 2 ) / 180 * #{pointY} )
+					* SIN( ( ASIN(1) * 2 ) / 180 * DF.POINT_Y ) ,16)
+				) ) AS DISTANCE
+			FROM
+				DAN_FACILITY DF
+			WHERE 1=1
+			]]>
+		<if test="danFcltCtlUsedTyList != null">
+			AND DF.TYPE_CD IN
+			<foreach item="danFcltCtlUsedTy" index="index" collection="danFcltCtlUsedTyList" open="(" separator="," close=")">
+				#{danFcltCtlUsedTy.danFcltUsedTyCd}
+			</foreach>
+		</if>
+		<![CDATA[
+			AND ( DF.POINT_X != 0 AND DF.POINT_X IS NOT NULL )
+			AND ( DF.POINT_Y != 0 AND DF.POINT_Y IS NOT NULL )
+			AND DF.POINT_X BETWEEN ${boundsLeft} AND ${boundsRight}
+			AND DF.POINT_Y BETWEEN ${boundsBottom} AND ${boundsTop}
+			ORDER BY DISTANCE ASC
+		)
+		WHERE DISTANCE <= #{radius}
+		AND ROWNUM <= 5
+		]]>
+	</select>
+
+	<!-- 위험시설물 정보 (DanFcltId) -->
+	<select id="selectDanFcltById" parameterType="danFclt" resultType="egovMap">
+		/* selectDanFcltGeoData */
+		SELECT
+			DF.FAC_SEQ,
+			DF.FAC_CD,
+			DF.TYPE_CD,
+			(SELECT CD_NM FROM COM_CODE WHERE DF.TYPE_CD = TYPE_CD) AS TYPE_NM,
+			DF.FAC_NM,
+			DF.ADDR,
+			DF.POINT_X,
+			DF.POINT_Y,
+		FROM
+			DAN_FACILITY DF
+		WHERE FAC_CD = #{facCd}
+	</select>
+
+	<!-- 화재목록 -->
+	<select id="selectEsList" parameterType="es" resultType="egovMap">
+		<![CDATA[
+		SELECT * FROM (
+			SELECT
+				ROWNUM RNUM,
+				INNER.*
+			FROM (
+				SELECT DUE.MEM_ID, CEO.EVT_OCR_NO, CEO.EVT_ID
+				, CEO.EVT_GRAD_CD, CEO.EVT_PRGRS_CD, CEO.EVT_PLACE
+				, CEO.POINT_X, CEO.POINT_Y, CEO.EVT_DTL
+				, TO_CHAR(TO_DATE(CEO.EVT_OCR_YMD_HMS, 'YYYYMMDDHH24MISS'),'MM-DD HH24:MI') AS  EVT_OCR_YMD_HMS
+				FROM COM_EVENT_OCR CEO, DAN_USER_EVENT DUE, COM_CODE CC
+				]]>
+		WHERE 1=1
+		<![CDATA[
+				/*화재 이벤트만 가져오기*/
+				AND DUE.MEM_ID = #{userId}
+				AND CEO.EVT_ID_SUB_CD = '화재'
+				AND CEO.EVT_ID = '119UC001'
+				AND DUE.EVT_OCR_NO = CEO.EVT_OCR_NO
+				AND CEO.EVT_ID = CC.COM_CD
+				AND CC.JONG_CD = 'ET'
+				AND CC.USE_FL = 'Y'
+				AND CEO.EVT_PRGRS_CD < '90'
+				AND CEO.POINT_X BETWEEN ${boundsLeft} AND ${boundsRight}
+				AND CEO.POINT_Y BETWEEN ${boundsBottom} AND ${boundsTop}
+				ORDER BY DUE.REG_DTS DESC
+			) INNER
+			WHERE 1=1
+			AND	ROWNUM <= #{lastIndex}
+		)
+		WHERE 1=1
+		AND	RNUM >= #{firstIndex}
+		]]>
+	</select>
+
+	<!-- 화재목록 갯수 -->
+	<select id="selectEsListTotCnt" parameterType="es" resultType="int">
+		<![CDATA[
+		SELECT COUNT(*) totCnt
+		FROM COM_EVENT_OCR CEO, DAN_USER_EVENT DUE, COM_CODE CC
+		]]>
+		WHERE 1=1
+		<![CDATA[
+		/* 화재 이벤트만 가져오기 */
+		AND DUE.MEM_ID = #{userId}
+		AND CEO.EVT_ID_SUB_CD = '화재'
+		AND CEO.EVT_ID = '119UC001'
+		AND DUE.EVT_OCR_NO = CEO.EVT_OCR_NO
+		AND CEO.EVT_ID = CC.COM_CD
+		AND CC.JONG_CD = 'ET'
+		AND CC.USE_FL = 'Y'
+		AND CEO.EVT_PRGRS_CD < '90'
+		AND CEO.POINT_X BETWEEN ${boundsLeft} AND ${boundsRight}
+		AND CEO.POINT_Y BETWEEN ${boundsBottom} AND ${boundsTop}
+		ORDER BY DUE.REG_DTS DESC
+		]]>
+	</select>
+
+	<select id="selectEvent" parameterType="event" resultType="egovMap">
+		SELECT
+		  CEO.EVT_OCR_NO AS EVT_OCR_NO
+		, CEO.EVT_ID AS EVT_ID
+		, CC.CD_NM AS EVT_NM
+		, CEO.EVT_PLACE AS EVT_PLACE
+		, CEO.EVT_GRAD_CD AS EVT_GRAD_CD
+		, CEO.EVT_PRGRS_CD AS EVT_PRGRS_CD
+		, TO_CHAR(TO_DATE(CEO.EVT_OCR_YMD_HMS, 'YYYYMMDDHH24MISS'), 'MM-DD HH24:MI:SS') AS EVT_OCR_YMD_HMS
+		, TO_CHAR(TO_DATE(CEO.EVT_OCR_YMD_HMS, 'YYYYMMDDHH24MISS'), 'HH24:MI:SS') AS EVT_OCR_HMS
+		, CEO.EVT_ID_SUB_CD AS EVT_ID_SUB_CD
+		, CEO.EVT_OCR_YMD_HMS AS EVT_YMD_HMS
+		, CEO.EVT_DTL AS EVT_DTL
+		, CEO.IMG_URL AS IMG_URL
+		, CEO.POINT_X AS POINT_X
+		, CEO.POINT_Y AS POINT_Y
+		FROM
+		COM_EVENT_OCR CEO
+		, COM_CODE CC
+		WHERE CEO.EVT_OCR_NO = #{evtOcrNo}
+		AND	CEO.EVT_ID = CC.COM_CD
+		<if test="evtId != '' and evtId != null">
+			AND CEO.EVT_ID = #{evtId}
+		</if>
+		<if test="evtPrgrsCd != '' and evtPrgrsCd != null">
+			AND CEO.EVT_PRGRS_CD = #{evtPrgrsCd}
+		</if>
+	</select>
+
+	 <!--화재목록 자동 표출 -->
+	<select id="selectAutoDisList" parameterType="es" resultType="egovMap">
+		SELECT
+		  CEO.EVT_OCR_NO
+		, CEO.EVT_ID
+		, CEO.EVT_ID_SUB_CD
+		, CEO.POINT_X
+		, CEO.POINT_Y
+		, CEO.EVT_DTL
+		, CEO.EVT_OCR_YMD_HMS
+		, CEO.EVT_PLACE
+		FROM
+		COM_EVENT_OCR CEO
+		WHERE CEO.EVT_OCR_NO = #{evtOcrNo}
+		<![CDATA[
+		  AND CEO.EVT_ID = '119UC001'
+		  and CEO.EVT_ID_SUB_CD = '화재'
+		  and ROWNUM = 1
+  		]]>
+	</select>
+
+	<!-- 사용자별 관제리스트 등록 -->
+	<insert id="mergeEsUserMntrList" parameterType="es">
+		MERGE INTO DAN_USER_EVENT DUE
+		USING DUAL
+		ON(DUE.MEM_ID = #{userId} AND DUE.EVT_OCR_NO = #{evtOcrNo})
+		WHEN MATCHED THEN
+			UPDATE SET
+				REG_DTS = SYSDATE
+		WHEN NOT MATCHED THEN
+				INSERT (
+						 DUE_SEQ
+					    ,MEM_ID
+				        ,EVT_OCR_NO
+				        ,REG_DTS
+				        ) VALUES (
+		                            NVL((SELECT MAX(DUE_SEQ) FROM DAN_USER_EVENT) + 1, 1)
+				        		   ,#{userId}
+				        		   ,#{evtOcrNo}
+				        		   ,SYSDATE
+				        		   )
+	</insert>
+
+	<!-- 처리되지 않은 사용자별 관제리스트 등록-->
+	<insert id="insertEsUserMntrList" parameterType="lgn">
+		INSERT INTO DAN_USER_EVENT (
+										  DUE_SEQ
+										 ,MEM_ID
+										 ,EVT_OCR_NO
+										 ,REG_DTS
+										)
+										SELECT
+										     NVL((SELECT MAX(DUE_SEQ) FROM DAN_USER_EVENT), 0) + ROWNUM DUE_SEQ
+											,#{memId} MEM_ID
+											,EVT_OCR_NO
+											,SYSDATE REG_DTS
+										FROM COM_EVENT_OCR
+										WHERE 1=1
+										<![CDATA[
+												AND EVT_OCR_NO NOT IN (SELECT EVT_OCR_NO FROM DAN_USER_EVENT)
+												AND EVT_ID = '119UC001'
+												AND EVT_PRGRS_CD < 90
+												AND EVT_ID_SUB_CD = '화재';
+										]]>
+	</insert>
+
+	<!-- 새로운 이벤트 존재 확인 -->
+	<select id="isExistsEvent" parameterType="event" resultType="int">
+		SELECT
+		COUNT(*) TOTCNT
+		FROM
+		COM_EVENT_OCR
+		WHERE EVT_OCR_NO = #{evtOcrNo}
+	</select>
+
+	<insert id="insertSmsSend" parameterType="sms">
+		INSERT INTO COM_SMS_SEND
+		(
+			 SEQ
+			,SMS_SEQ
+			,SEND_FL
+			,SMS_CONTS
+			,SEND_DT
+			,SEND_MEM_ID
+			,SEND_MEM_NM
+			,REG_MEM_ID
+			,REG_DTS
+			,MOD_DTS
+		)
+		VALUES
+		(
+		     #{seq}
+		   , NVL((SELECT MAX (SMS_SEQ) FROM COM_SMS_SEND) + 1, 1)
+		   , #{sendFl}
+		   , #{smsConts}
+		   , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		   , #{sendMemId}
+		   , #{sendMemNm}
+		   , #{regMemId}
+		   , SYSDATE
+		   , SYSDATE
+		)
+	</insert>
+
+	<insert id="insertSmsRecv" parameterType="java.util.HashMap">
+		INSERT INTO COM_SMS_RECV
+		(
+			 SEQ
+			,IDX_NO
+			,SMS_RCV_ID
+			,SMS_RCV_MOBL_NO
+			,SMS_RCV_NM
+			,SEND_FL
+			,SMS_TRMS_LOG
+			,RCV_DT
+		)
+		VALUES
+		(
+			  #{seq}
+			, NVL((SELECT MAX (IDX_NO) FROM COM_SMS_RECV) + 1, 1)
+			, #{smsRcvId}
+			, #{smsRcvMoblNo}
+			, #{smsRcvNm}
+			, #{sendFl}
+			, ''
+			, TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		)
+	</insert>
+
+	<select id="selectSmsSeq"  resultType="String">
+		 <![CDATA[
+        	SELECT LPAD(TO_NUMBER(NVL(MAX(SEQ), 0)) + 1, 40, '0') FROM COM_SMS_SEND
+        ]]>
+	</select>
+
+	<!-- SMS 송신상태 변경 -->
+	<update id="updateSmsSendStatus" parameterType="String">
+		UPDATE COM_SMS_SEND
+		SET
+			SEND_FL = 'Y',
+			SEND_DT = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS'),
+			MOD_DTS = SYSDATE
+		WHERE 1=1
+		AND SEQ = #{seq}
+	</update>
+
+	<!-- SMS 수신상태 변경 -->
+	<update id="updateSmsRcvStatus" parameterType="String">
+		UPDATE COM_SMS_RECV
+		SET
+			SEND_FL = 'Y',
+			RCV_DT = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		WHERE 1=1
+		AND SEQ = #{seq}
+	</update>
+
+	<!-- 통합검색 목록 -->
+	<select id="selectPortalSearchList" parameterType="cmmCode" resultType="egovMap">
+		SELECT * FROM (
+		SELECT
+		ROWNUM AS RNUM
+		, INNER.GUBN
+		, INNER.POINT_X
+		, INNER.POINT_Y
+		, INNER.BULD_NM
+		, INNER.NEW_ADDR
+		, INNER.OLD_ADDR
+		, INNER.PNU
+		<![CDATA[
+			, '[이름] ' || INNER.BULD_NM || '<br>[도로명] ' || INNER.NEW_ADDR || '<br>[지번] ' ||  INNER.OLD_ADDR AS CONTENTS
+			]]>
+		FROM (
+		<if test="searchType == 'addr' || searchType == 'poi'">
+		SELECT
+		GUBN
+		, JJ.POINT_X
+		, JJ.POINT_Y
+		, DD.BULD_NM
+		, DD.NEW_ADDR
+		, DD.OLD_ADDR
+		, DD.PNU
+		FROM (
+		SELECT
+		SUBSTR(J.PNU,1,10) AS LG_DONG_CD
+		, PNU
+		, RTRIM(JIBUN, SUBSTR(JIBUN, -1)) AS JIBUN
+		, (SELECT LG_EMD_NM||NVL2(LG_LI_NM, ' '||LG_LI_NM, '') FROM UCP_DOAN.UM_GIS_DONG WHERE LG_DONG_CD = SUBSTR(J.PNU,1,10) AND ROWNUM=1)||' '||RTRIM(JIBUN, SUBSTR(JIBUN, -1)) AS OLD_ADDR
+		, POINT_X
+		, POINT_Y
+		FROM UCP_DOAN.UM_JIBUN J
+		) JJ
+		, (
+		SELECT GUBN,  LG_DONG_CD, PNU, JIBUN, OLD_ADDR, NEW_ADDR, BULD_NM, MNG_NO
+		FROM (
+
+
+		SELECT '주소' AS GUBN, LG_DONG_CD, PNU, JIBUN, OLD_ADDR, NEW_ADDR, BULD_NM, MNG_NO
+		FROM  (
+		SELECT
+		LG_DONG_CD
+		, PNU AS PNU
+		, REPLACE(TO_CHAR(JIBUN_MAIN_NO)||'-'||TO_CHAR(JIBUN_SUB_NO),'-0','') AS JIBUN
+		, SIDO_NM||' '||SIGUNGU_NM||' '||LG_EMD_NM||NVL2(LG_LI_NM,' ','')||LG_LI_NM||' '||REPLACE(TO_CHAR(JIBUN_MAIN_NO)||'-'||TO_CHAR(JIBUN_SUB_NO),'-0','') AS OLD_ADDR
+		, SIDO_NM||' '||SIGUNGU_NM||' '||ROAD_NM||' '||REPLACE(TO_CHAR(BULD_MAIN_NO)||'-'||TO_CHAR(BULD_SUB_NO),'-0','') AS NEW_ADDR
+		, BULD_MGMT_NO AS MNG_NO
+		, DECODE(BULD_NM, NULL, SIGUNGU_BULD_NM, BULD_NM) || DECODE(BULD_DETL_NM , NULL,'' , ' '||BULD_DETL_NM ) BULD_NM
+		FROM UCP_DOAN.UM_ADDR_MATCHING
+		)
+
+		WHERE 1=1
+		<if test="searchKeyword != '' ">
+			<if test="searchType == 'addr'">
+				and  REGEXP_LIKE(OLD_ADDR||NEW_ADDR , #{searchKeyword})
+			</if>
+			<if test="searchType == 'poi'">
+				and REGEXP_LIKE(BULD_NM ,  #{searchKeyword})
+			</if>
+		</if>
+		)
+		) DD WHERE JJ.PNU = DD.PNU
+		</if>
+		<if test="searchType == 'danFclt'">
+			SELECT
+			'위험시설물' AS GUBN
+			, DF.POINT_X
+			, DF.POINT_Y
+			, DF.FAC_NM AS BULD_NM
+			, DF.ADDR AS NEW_ADDR
+			, DF.ADDR AS OLD_ADDR
+			, '' AS PNU
+			FROM DAN_FACILITY DF
+			<if test="searchKeyword != ''"> WHERE REGEXP_LIKE(FAC_NM || ADDR || ADDR, #{searchKeyword}) </if>
+		</if>
+		) inner
+		<![CDATA[
+		WHERE ROWNUM <= #{lastIndex}
+	) WHERE RNUM >= #{firstIndex}
+	]]>
+	</select>
+
+	<!-- 통합검색 목록 총 개수 -->
+	<select id="selectPortalSearchListTotCnt" parameterType="cmmCode" resultType="int">
+		SELECT COUNT(*) AS TOTCNT FROM (
+		<if test="searchType == 'addr' || searchType == 'poi'">
+		SELECT
+		GUBN
+		, JJ.POINT_X
+		, JJ.POINT_Y
+		, DD.BULD_NM
+		, DD.NEW_ADDR
+		, DD.OLD_ADDR
+		, DD.PNU
+		FROM (
+		SELECT
+		SUBSTR(J.PNU,1,10) AS LG_DONG_CD
+		, PNU
+		, RTRIM(JIBUN, SUBSTR(JIBUN, -1)) AS JIBUN
+		, (SELECT LG_EMD_NM||NVL2(LG_LI_NM, ' '||LG_LI_NM, '') FROM UCP_DOAN.UM_GIS_DONG WHERE LG_DONG_CD = SUBSTR(J.PNU,1,10) AND ROWNUM=1)||' '||RTRIM(JIBUN, SUBSTR(JIBUN, -1)) AS OLD_ADDR
+		, POINT_X
+		, POINT_Y
+		FROM UCP_DOAN.UM_JIBUN J
+		) JJ
+		, (
+		SELECT GUBN,  LG_DONG_CD, PNU, JIBUN, OLD_ADDR, NEW_ADDR, BULD_NM, MNG_NO
+		FROM (
+		SELECT '주소' AS GUBN, LG_DONG_CD, PNU, JIBUN, OLD_ADDR, NEW_ADDR, BULD_NM, MNG_NO
+		FROM  (
+		SELECT
+		LG_DONG_CD
+		, LG_DONG_CD||DECODE(IS_MNTN, 0, 1, 2)||LPAD(TO_CHAR(JIBUN_MAIN_NO),4,'0')||LPAD(TO_CHAR(JIBUN_SUB_NO),4,'0') AS PNU
+		, REPLACE(TO_CHAR(JIBUN_MAIN_NO)||'-'||TO_CHAR(JIBUN_SUB_NO),'-0','') AS JIBUN
+		, SIDO_NM||' '||SIGUNGU_NM||' '||LG_EMD_NM||NVL2(LG_LI_NM,' ','')||LG_LI_NM||' '||REPLACE(TO_CHAR(JIBUN_MAIN_NO)||'-'||TO_CHAR(JIBUN_SUB_NO),'-0','') AS OLD_ADDR
+		, SIDO_NM||' '||SIGUNGU_NM||' '||ROAD_NM||' '||REPLACE(TO_CHAR(BULD_MAIN_NO)||'-'||TO_CHAR(BULD_SUB_NO),'-0','') AS NEW_ADDR
+		, BULD_MGMT_NO AS MNG_NO
+		, DECODE(BULD_NM, NULL, SIGUNGU_BULD_NM, BULD_NM) || DECODE(BULD_DETL_NM , NULL,'' , ' '||BULD_DETL_NM ) BULD_NM
+		FROM UCP_DOAN.UM_ADDR_MATCHING
+		)
+
+		WHERE 1=1
+		<if test="searchKeyword != '' ">
+			<if test="searchType == 'addr'">
+				and  REGEXP_LIKE(OLD_ADDR||NEW_ADDR , #{searchKeyword})
+			</if>
+			<if test="searchType == 'poi'">
+				and REGEXP_LIKE(BULD_NM ,  #{searchKeyword})
+			</if>
+		</if>
+
+		)
+		) DD WHERE JJ.PNU = DD.PNU
+		</if>
+		<if test="searchType == 'danFclt'">
+			SELECT
+			'위험시설물' AS GUBN
+			, DF.POINT_X
+			, DF.POINT_Y
+			, DF.FAC_NM AS BULD_NM
+			, DF.ADDR AS NEW_ADDR
+			, DF.ADDR AS OLD_ADDR
+			, ''
+			FROM DAN_FACILITY DF
+			<if test="searchKeyword != ''"> WHERE REGEXP_LIKE(FAC_NM || ADDR || ADDR, #{searchKeyword}) </if>
+		</if>
+		) WHERE 1=1
+	</select>
+
+</mapper>
