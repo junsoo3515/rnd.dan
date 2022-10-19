@@ -14,7 +14,7 @@
 		<org.springframework.security.version>4.0.2.RELEASE</org.springframework.security.version>
 		<egovframework.rte.version>3.5.0</egovframework.rte.version>
 		<org.apache.tiles-version>3.0.5</org.apache.tiles-version>
-		<jackson.version>2.3.0</jackson.version>
+		<jackson.version>2.13.4.1</jackson.version>
 		<vertx.version>2.0.1-final</vertx.version>
 		<mod-socket-io.version>1.0.2</mod-socket-io.version>
 	</properties>
